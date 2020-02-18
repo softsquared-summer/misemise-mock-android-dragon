@@ -1,5 +1,6 @@
 package com.softsquared.template.src.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -14,14 +15,18 @@ import androidx.viewpager.widget.ViewPager;
 import com.softsquared.template.R;
 import com.softsquared.template.src.BaseActivity;
 import com.softsquared.template.src.main.interfaces.MainActivityView;
+import com.softsquared.template.src.splash.SplashActivity;
 
 public class MainActivity extends BaseActivity implements MainActivityView {
 
     private ViewPager mViewPager;
     private MainViewPagerAdapter mPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+        startActivity(intent);
         setContentView(R.layout.activity_main);
 
 

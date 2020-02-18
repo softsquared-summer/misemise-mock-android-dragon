@@ -63,13 +63,24 @@
                 android:layout_height="wrap_content"
                 >
                 <ImageView
+                    android:id="@+id/iv_statusImage"
                     android:layout_width="180dp"
                     android:layout_height="180dp"
-                    android:src="@drawable/ic_wink"
+                    android:background="@drawable/ic_wink"
                     android:scaleType="fitXY"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="30dp"
+                    />
+
+                <Button
+                    android:id="@+id/btn_animation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_statusImage"
+                    android:text="애니메이션ㄱㄱ"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
                     />
             </RelativeLayout>
             <TextView

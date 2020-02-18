@@ -17,10 +17,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
-        <activity android:name=".src.splash.splash"></activity>
+        <activity android:name=".src.main.AnimationStarter">
+
+        </activity>
+        <activity android:name=".src.splash.SplashActivity"></activity>
         <activity android:name=".src.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
