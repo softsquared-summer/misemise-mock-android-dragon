@@ -1,7 +1,13 @@
 package com.softsquared.template.src.main;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,20 +19,36 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
+import com.softsquared.template.src.main.sideBar.SideEightStage;
+import com.softsquared.template.src.main.sideBar.SideInfoActivity;
+import com.softsquared.template.src.main.sideBar.SideSetting;
+import com.softsquared.template.src.main.sideBar.SideWho;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import me.relex.circleindicator.CircleIndicator;
 
 
 public class MainViewPagerAdapter extends PagerAdapter {
     private static final String TAG = "AnimationStarter";
-    ImageButton mIbtnOpenDrawer;
-    ImageView mIvStatusImage;
-    Button mBtnAnimation;
+
     View view;
     private Context mContext = null;
     public MainViewPagerAdapter(Context context){
@@ -36,24 +58,101 @@ public class MainViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position){
         view = null;
+        int backColor = R.color.colorSoso;
+        int cardColor = R.color.colorCardSoso;
+        final InPageViewPagerAdapter mInPagePagerAdapter;
+        final ViewPager mInPageViewPager;
+
+
+        final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho;
+        final ImageView IvStatusImage;
+        final Button BtnAnimation;
+        final CircleIndicator indicator;
 
 
         if (mContext != null) {
             // LayoutInflater를 통해 "/res/layout/layout_page.xml"을 뷰로 생성.
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.layout_page, container, false);
+
             final View finalView = view;
+            ibtnEight = view.findViewById(R.id.ibtn_eight);
+            IbtnOpenDrawer = view.findViewById(R.id.ibtn_openDrawer);
+            IvStatusImage = view.findViewById(R.id.iv_statusImage);
+            BtnAnimation = view.findViewById(R.id.btn_animation);
+            ibtnShare = view.findViewById(R.id.ibtn_share);
+            indicator = view.findViewById(R.id.iv_oval);
+            indicator.createIndicators(10,position);
+            ibtnWho = view.findViewById(R.id.ibtn_who);
 
-            mIbtnOpenDrawer = view.findViewById(R.id.ibtn_openDrawer);
-            mIvStatusImage = view.findViewById(R.id.iv_statusImage);
-            mBtnAnimation = view.findViewById(R.id.btn_animation);
+            mInPageViewPager = view.findViewById(R.id.vp_inPage);
+            mInPagePagerAdapter = new InPageViewPagerAdapter(mContext);
+            mInPageViewPager.setAdapter(mInPagePagerAdapter);
 
-            mBtnAnimation.setOnClickListener(new Button.OnClickListener() {
+            ibtnWho.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mIvStatusImage.clearAnimation();
-                    TranslateAnimation transAnim = new TranslateAnimation(getDisplayWidtht()/2, getDisplayWidtht()/2, -300,
-                            getDisplayHeight()/2);
+                    Intent intent = new Intent(v.getContext(), SideWho.class);
+                    mContext.startActivity(intent);
+                }
+            });
+
+            ibtnSetting = view.findViewById(R.id.ibtn_setting);
+            ibtnSetting.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), SideSetting.class);
+                    mContext.startActivity(intent);
+                }
+            });
+
+            ibtnInfo = view.findViewById(R.id.btn_info);
+            ibtnEight.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), SideEightStage.class);
+                    mContext.startActivity(intent);
+                }
+            });
+            ibtnShare.setOnClickListener(new Button.OnClickListener() {
+                String path;
+                @Override
+                public void onClick(View v) {
+//
+//                    View container = ((Activity)mContext).getWindow().getDecorView();
+//                    container.buildDrawingCache();
+//                    Bitmap bm = container.getDrawingCache();
+//                    String fileName = "image_" + System.currentTimeMillis();
+//
+//                    try {
+//                        path = saveBitmap(fileName, bm, 30, mContext);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+////                    Uri uri = Uri.fromFile(new File(path));
+//                    Uri uri = FileProvider.getUriForFile(mContext, mContext.getApplicationContext().getPackageName() , new File(path));
+//                    Intent intent = new Intent(Intent.ACTION_SEND);
+//                    intent.putExtra(Intent.EXTRA_STREAM, uri);
+//                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                    intent.setType("image/*");
+//                    mContext.startActivity(Intent.createChooser(intent, "공유하기"));
+                }
+            });
+
+            ibtnInfo.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), SideInfoActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+            BtnAnimation.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IvStatusImage.clearAnimation();
+                    TranslateAnimation transAnim = new TranslateAnimation(0, 0, -500,
+                            IvStatusImage.getTop());
                     transAnim.setStartOffset(500);
                     transAnim.setDuration(3000);
                     transAnim.setFillAfter(true);
@@ -68,12 +167,12 @@ public class MainViewPagerAdapter extends PagerAdapter {
                         public void onAnimationEnd(Animation animation) {
                             Log.i(TAG,
                                     "Ending button dropdown animation. Clearing animation and setting layout");
-                            mIvStatusImage.clearAnimation();
-                            final int left = mIvStatusImage.getLeft();
-                            final int top = mIvStatusImage.getTop();
-                            final int right = mIvStatusImage.getRight();
-                            final int bottom = mIvStatusImage.getBottom();
-                            mIvStatusImage.layout(left, top, right, bottom);
+                            IvStatusImage.clearAnimation();
+                            final int left = IvStatusImage.getLeft();
+                            final int top = IvStatusImage.getTop();
+                            final int right = IvStatusImage.getRight();
+                            final int bottom = IvStatusImage.getBottom();
+                            IvStatusImage.layout(left, top, right, bottom);
                         }
 
                         @Override
@@ -81,13 +180,13 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
                         }
                     });
-//                    mIvStatusImage.startAnimation(transAnim);
+                    IvStatusImage.startAnimation(transAnim);
                 }
             });
 
 
 
-            mIbtnOpenDrawer.setOnClickListener(new Button.OnClickListener() {
+            IbtnOpenDrawer.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DrawerLayout drawer = (DrawerLayout) finalView.findViewById(R.id.dlo_drawer);
@@ -127,4 +226,32 @@ public class MainViewPagerAdapter extends PagerAdapter {
     private int getDisplayWidtht(){
         return view.getResources().getDisplayMetrics().widthPixels;
     }
+
+    public static String saveBitmap(String filename, Bitmap bm,int quality,Context mContext) throws IOException {
+        File f = new File(mContext.getCacheDir(), filename);
+        f.createNewFile();
+
+        //Convert bitmap to byte array
+        Bitmap bitmap = bm;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+
+        //write the bytes in file
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(f);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return f.getAbsolutePath();
+    }
+
 }

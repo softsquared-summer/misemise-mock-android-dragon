@@ -11,4 +11,16 @@
     <color name="colorBad">#ec9000</color>
     <color name="colorVeryBad">#c62827</color>
     <color name="colorTerrible">#212121</color>
+
+
+    <!-- condition background -->
+    <color name="colorCardGood">#010277bd</color>
+    <color name="colorCardNotBad">#0101a2b4</color>
+    <color name="colorCardSoso">#43a047</color>
+    <color name="colorCardBad">#01ec9000</color>
+    <color name="colorCardVeryBad">#01c62827</color>
+    <color name="colorCardTerrible">#01212121</color>
+
+    <!-- sidebar -->
+    <color name="colorSideBack">#00bcd5</color>
 </resources>

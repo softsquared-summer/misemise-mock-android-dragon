@@ -7,5 +7,27 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="sidebar_info_title">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+    <style name="sidebar_info_contents">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+    <style name="main_title">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">#ffffff</item>
 
+    </style>
+    <style name="main_details_left">
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textAlignment">textEnd</item>
+    </style>
+    <style name="main_details_right">
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
 </resources>

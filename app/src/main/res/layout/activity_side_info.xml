@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".src.main.sideBar.SideInfoActivity"
+    android:background="@color/colorSideBack"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_backToMain"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:src="@drawable/ic_back"
+            android:scaleType="fitXY"
+            android:paddingRight="0dp"
+            android:paddingVertical="0dp"
+            android:paddingHorizontal="0dp"
+        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="미세미세 정보"
+            android:paddingLeft="10dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+
+            />
+    </LinearLayout>
+    <ImageView
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:src="@drawable/info"
+        android:scaleType="fitXY"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:textAlignment="center"
+                android:text="@string/sidebar_info_title"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:textAlignment="textStart"
+                android:text="@string/sidebar_info_notification"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:text="미세미세 예보"
+                >
+
+            </TextView>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:text="@string/sidebar_info_pre"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:text="미세미세 실시간 정보"
+                >
+
+            </TextView>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:text="@string/sidebar_info_liveTime"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:text="자료 제공"
+                >
+
+            </TextView>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:text="@string/sidebar_info_infoServe"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:text="주의 사항"
+                >
+
+            </TextView>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:text="@string/sidebar_info_notification2"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:text="통합지수(통합대기환경지수, CAI)"
+                >
+
+            </TextView>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:text="@string/sidebar_info_total"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:text="미세먼지(PM10)"
+                >
+
+            </TextView>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:text="@string/sidebar_info_fineDust"
+                />
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_title"
+                android:text="초미세먼지(PM2.5)"
+                >
+
+            </TextView>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/sidebar_info_contents"
+                android:text="@string/sidebar_info_superFindDust"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

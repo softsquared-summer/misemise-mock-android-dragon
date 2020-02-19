@@ -3,4 +3,39 @@
     <string name="loading">로딩중입니다.</string>
     <string name="network_error">네트워크 연결이 원활하지 않습니다.</string>
     <string name="version">Ver 6.0.7</string>
+    <!-- sidebar-info -->
+    <string name="sidebar_info_title_text_size">14dp</string>
+    <string name="sidebar_info_contents_text_size">11dp</string>
+    <string name="sidebar_info_title">*위 그래프는 4단계 모드 사용시 기준이며 한국환경공단 기준과 같습니다.
+    강화된 세계보건기구(WHO) 기준을 사용하고 싶으신 분들께선 \'메뉴 ->
+    미세미세 8단계모드\'를 읽어보시고 설정에서 8단계 모드
+    변경해주세요.\n\n
+    </string>
+    <string name="sidebar_info_notification">
+        주요: 미세먼지는 입자가 매우 작아 눈에 보이지 않습니다. 밖이 아무리 맑아보여도 미세먼지 농도가 높을 수 있으니 꼭 미세먼지 농도를 확인하세요!\n\n
+    </string>
+    <string name="sidebar_info_pre">
+        예보 데이터는 하루에 두번(오전, 오후) 아래와 같이 업데이트 됩니다.\n
+        예보값은 미세먼지와 초미세먼지 정보만 가지고 측정됩니다.\n
+    </string>
+    <string name="sidebar_info_liveTime">
+        실시간 데이터는 지정 된 위치로부터 최단거리에 있는 측정소에서 측정 된 통합지수, 미세먼지, 초미세먼지 중 가장 높은 등급을 기준으로 선정됩니다. 또한, 초미세먼지 정보는 지정된 특정 측정소에서만 제공되오니, 값이 표기되지 않을 경우 위치를 바꿔 보시기 바랍니다\n.
+    </string>
+    <string name="sidebar_info_infoServe">
+        환경부 한국환경공단 (Air Korea)\n
+        기상청\n
+        안양대학교 기후에너지환경융합연구소 (환경에너지 공학과 구윤서 교수)\n
+    </string>
+    <string name="sidebar_info_notification2">
+        미세미세 자료는 인증 전 실시간 관측자료로, 현지 사정에 의해 잘못된 값이 표기될 수 있습니다. 또한 측정소 상태에 따라 측정 시간이 지연되거나 측정값이 표기되지 않을 수 있습니다. 하여, 사용시 발생하는 건강 혹은 기타 문제 발생건에 대해 미세미세는 아무런 책임을 지지 않습니다.\n
+    </string>
+    <string name="sidebar_info_total">
+        통합대기환경지수(CAI, Comprehensive air-quality index)는 대표적인 6가지 오염물질(PM2.5, PM10, 03, NO2, CO, SO2)에 대한 대기질의 상태지수를 나타냅니다.\n
+    </string>
+    <string name="sidebar_info_fineDust">
+        지름 10^(-6)m 이하인 먼지를 미세먼지라 말하며 환경법령에서는 흔히 PM10으로 부른다. 사람의 폐포까지 깊숙하게 침투해 각종 호흡기 질환의 직접적인 원인이 되며 황산염, 질산염, 암모니아 등의 이온 성분과 금속화합물, 탄소화합물 등 유해물질로 이뤄져있다.\n
+    </string>
+    <string name="sidebar_info_superFindDust">
+        지름 2.5mm 이하인 먼지를 초미세먼지라 말하며 환경법령에서는 흔히 PM2.5로 부른다. 미세먼지보다 유해한 초미세먼지는 입자가 미세하여 코 점막을 통해 걸러지지 않고 흡입시 폐포까지 직접 침투하여 천식이나 폐질환의 유병률과 조기사망률을 증가시킨다.\n
+    </string>
 </resources>

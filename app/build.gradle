@@ -32,4 +32,10 @@ dependencies {
 
     // https://github.com/square/retrofit/tree/master/retrofit-converters/gson
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // for
+    implementation 'me.relex:circleindicator:2.1.4'
+
 }

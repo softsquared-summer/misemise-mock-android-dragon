@@ -4,6 +4,8 @@
     package="com.softsquared.template">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".src.ApplicationClass"
@@ -17,10 +19,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
-        <activity android:name=".src.main.AnimationStarter">
 
-        </activity>
-        <activity android:name=".src.splash.SplashActivity"></activity>
+        <activity android:name=".src.main.sideBar.SideWho"></activity>
+        <activity android:name=".src.main.sideBar.SideSetting" />
+        <activity android:name=".src.main.sideBar.SideEightStage" />
+        <activity android:name=".src.main.sideBar.SideInfoActivity" />
+
+        <activity android:name=".src.splash.SplashActivity" />
         <activity android:name=".src.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
