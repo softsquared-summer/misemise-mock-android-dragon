@@ -1,5 +1,8 @@
 package com.softsquared.template.src.main.adapter;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,18 +18,18 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
-import com.softsquared.template.src.main.adapter.InPageViewPagerAdapter;
+import com.softsquared.template.src.main.fragments.MapFragment;
 import com.softsquared.template.src.main.items.PreDayItem;
 import com.softsquared.template.src.main.items.PreTimeItem;
 import com.softsquared.template.src.main.sideBar.SideEightStage;
@@ -46,7 +49,7 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class MainViewPagerAdapter extends PagerAdapter {
     private static final String TAG = "AnimationStarter";
-
+   
 
     private Context mContext = null;
 
@@ -80,12 +83,24 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
 //        indicator
         final CircleIndicator indicator;
+        final MapFragment fragment1;
+
+
+//        fragment
+        final FragmentManager fragmentManager;
+        final FragmentTransaction fragmentTransaction = null;
 
 
         if (mContext != null) {
-            // LayoutInflater를 통해 "/res/layout/layout_page.xml"을 뷰로 생성.
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.layout_page, container, false);
+
+            MapFragment mapFragment = new MapFragment();
+
+            FragmentTransaction transaction = ((Activity)mContext).getFragmentManager().beginTransaction();
+            transaction.add(R.id.llo_fragment, mapFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
             final View finalView = view;
             ibtnEight = view.findViewById(R.id.ibtn_eight);
@@ -115,7 +130,6 @@ public class MainViewPagerAdapter extends PagerAdapter {
             mInPageViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
                 public void onPageSelected(int position){
-
                     if(position < 2)
                         mInPageViewPager.setCurrentItem((position + 2), true);
                     else if(position >= 2 * 2)
