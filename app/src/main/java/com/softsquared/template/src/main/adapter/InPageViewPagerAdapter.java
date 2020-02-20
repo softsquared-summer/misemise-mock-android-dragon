@@ -1,4 +1,4 @@
-package com.softsquared.template.src.main;
+package com.softsquared.template.src.main.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

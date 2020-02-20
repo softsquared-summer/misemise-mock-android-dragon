@@ -1,13 +1,8 @@
-package com.softsquared.template.src.main;
+package com.softsquared.template.src.main.adapter;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,17 +15,20 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
+import com.softsquared.template.src.main.adapter.InPageViewPagerAdapter;
+import com.softsquared.template.src.main.items.PreDayItem;
+import com.softsquared.template.src.main.items.PreTimeItem;
 import com.softsquared.template.src.main.sideBar.SideEightStage;
 import com.softsquared.template.src.main.sideBar.SideInfoActivity;
 import com.softsquared.template.src.main.sideBar.SideSetting;
@@ -41,9 +39,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -63,13 +59,27 @@ public class MainViewPagerAdapter extends PagerAdapter {
         View view = null;
         int backColor = R.color.colorSoso;
         int cardColor = R.color.colorCardSoso;
+
+//        arrayList
+        ArrayList<PreDayItem> mAlPreDayList = new ArrayList<PreDayItem>();
+        ArrayList<PreTimeItem> mAlPreTimeList = new ArrayList<PreTimeItem>();
+
+//        adapter
         final InPageViewPagerAdapter mInPagePagerAdapter;
+        final RecyclerPreDayAdapter mRecyclerPreDayAdapter;
+        final RecyclerPreTimeAdapter mRecyclerPreTimeAdapter;
+//        view group
+        final RecyclerView mRvPreDay, mRvPreTime;
         final ViewPager mInPageViewPager;
+
+//        view
         final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho, ibtnLeft, ibtnRight;
         final ImageView IvStatusImage;
         final Button BtnAnimation;
-        final CircleIndicator indicator;
         final TextView tv_myLocation;
+
+//        indicator
+        final CircleIndicator indicator;
 
 
         if (mContext != null) {
@@ -118,6 +128,28 @@ public class MainViewPagerAdapter extends PagerAdapter {
             mInPagePagerAdapter.addItem(0);
             mInPagePagerAdapter.addItem(1);
             mInPagePagerAdapter.notifyDataSetChanged();
+
+            mRvPreDay = view.findViewById(R.id.rv_preDay);
+            mRecyclerPreDayAdapter = new RecyclerPreDayAdapter(mAlPreDayList);
+            mRvPreDay.setAdapter(mRecyclerPreDayAdapter);
+            mRvPreDay.setLayoutManager(new LinearLayoutManager(mContext));
+
+            mRvPreTime = view.findViewById(R.id.rv_preTime);
+            mRecyclerPreTimeAdapter = new RecyclerPreTimeAdapter(mAlPreTimeList);
+            mRvPreTime.setAdapter(mRecyclerPreTimeAdapter);
+            mRvPreTime.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+
+            for(int i=0;i<14;i++){
+                mRecyclerPreDayAdapter.addItem(new PreDayItem("요일", "아침", "좋음"));
+            }
+            for(int i=0;i<14;i++){
+                mRecyclerPreTimeAdapter.addItem(new PreTimeItem("시간", "좋음"));
+            }
+
+
+            mRecyclerPreDayAdapter.notifyDataSetChanged();
+
 
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override

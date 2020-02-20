@@ -1,4 +1,4 @@
-package com.softsquared.template.src.main;
+package com.softsquared.template.src.main.items;
 
 public class InPageItem {
     public String a, b, c;

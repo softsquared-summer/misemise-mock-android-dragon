@@ -152,7 +152,7 @@
                     >
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="150dp">
+                        android:layout_height="170dp">
                         <ImageButton
                             android:id="@+id/ibtn_left"
                             android:layout_width="20dp"
@@ -167,7 +167,7 @@
                             android:id="@+id/vp_inPage"
 
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_centerHorizontal="true"
                             android:isScrollContainer="true"
                             >
@@ -207,13 +207,98 @@
                     android:src="@drawable/advertisement_big" />
 
             </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/tv_time_pre_title"
+                style="@style/main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ibtn_ad"
+                android:text="시간별 예보" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_time_pre"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@id/tv_time_pre_title"
+                card_view:cardBackgroundColor="@color/colorCardSoso"
+                card_view:cardCornerRadius="15dp"
+                card_view:cardUseCompatPadding="true">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_preTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/tv_day_pre_title"
+                style="@style/main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/card_time_pre"
+                android:text="일별 예보" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_day_pre"
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@id/tv_day_pre_title"
+                card_view:cardBackgroundColor="@color/colorCardSoso"
+                card_view:cardCornerRadius="15dp"
+                card_view:cardUseCompatPadding="true">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_preDay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/tv_searcher_info_title"
+                style="@style/main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/card_day_pre"
+                android:text="주변 측정소 정보" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tv_searcher_info"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@id/tv_searcher_info_title"
+                card_view:cardBackgroundColor="@color/colorCardSoso"
+                card_view:cardCornerRadius="15dp"
+                card_view:cardUseCompatPadding="true">
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        >
+
+                    </LinearLayout>
+                </ScrollView>
+            </androidx.cardview.widget.CardView>
+
+
 
             <TextView
                 android:id="@+id/tv_details"
                 style="@style/main_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ibtn_ad"
+                android:layout_below="@+id/tv_searcher_info"
                 android:text="세부사항" />
 
             <androidx.cardview.widget.CardView

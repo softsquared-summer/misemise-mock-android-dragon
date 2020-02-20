@@ -19,12 +19,11 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
-
-        <activity android:name=".src.main.sideBar.SideWho"></activity>
+        <activity android:name=".src.main.BookMarkActivity"></activity>
+        <activity android:name=".src.main.sideBar.SideWho" />
         <activity android:name=".src.main.sideBar.SideSetting" />
         <activity android:name=".src.main.sideBar.SideEightStage" />
         <activity android:name=".src.main.sideBar.SideInfoActivity" />
-
         <activity android:name=".src.splash.SplashActivity" />
         <activity android:name=".src.main.MainActivity">
             <intent-filter>

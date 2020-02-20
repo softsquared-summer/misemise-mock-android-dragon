@@ -1,32 +1,14 @@
 package com.softsquared.template.src.main;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
 import com.softsquared.template.src.BaseActivity;
+import com.softsquared.template.src.main.adapter.MainViewPagerAdapter;
 import com.softsquared.template.src.main.interfaces.MainActivityView;
-import com.softsquared.template.src.splash.SplashActivity;
-
-import java.io.File;
 
 public class MainActivity extends BaseActivity implements MainActivityView {
 
