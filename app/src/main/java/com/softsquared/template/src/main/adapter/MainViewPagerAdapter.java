@@ -168,7 +168,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()-1, true);
+                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()+1, true);
                 }
             });
 

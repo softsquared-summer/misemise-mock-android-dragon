@@ -3,6 +3,7 @@ package com.softsquared.template.src.main;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
@@ -10,7 +11,7 @@ import com.softsquared.template.src.BaseActivity;
 import com.softsquared.template.src.main.adapter.MainViewPagerAdapter;
 import com.softsquared.template.src.main.interfaces.MainActivityView;
 
-public class MainActivity extends BaseActivity implements MainActivityView {
+public class MainActivity extends AppCompatActivity  {
 
     private ViewPager mViewPager;
     private MainViewPagerAdapter mPagerAdapter;
@@ -44,23 +45,20 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         mViewPager = findViewById(R.id.viewPager);
         mPagerAdapter = new MainViewPagerAdapter(this);
         mViewPager.setAdapter(mPagerAdapter);
-
-
-
-
+        // mViewPager.setOffscreenPageLimit(10);
     }
 
 
 
-    @Override
-    public void validateSuccess(String text) {
-        hideProgressDialog();
-
-    }
-
-    @Override
-    public void validateFailure(@Nullable String message) {
-        hideProgressDialog();
-        showCustomToast(message == null || message.isEmpty() ? getString(R.string.network_error) : message);
-    }
+//    @Override
+//    public void validateSuccess(String text) {
+//        hideProgressDialog();
+//
+//    }
+//
+//    @Override
+//    public void validateFailure(@Nullable String message) {
+//        hideProgressDialog();
+//        showCustomToast(message == null || message.isEmpty() ? getString(R.string.network_error) : message);
+//    }
 }
