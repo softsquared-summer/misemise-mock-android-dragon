@@ -150,6 +150,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="150dp">
                         <ImageButton
+                            android:id="@+id/ibtn_left"
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
                             android:layout_alignParentLeft="true"
@@ -161,10 +162,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
+                            android:isScrollContainer="true"
                             >
-
                         </androidx.viewpager.widget.ViewPager>
                         <ImageButton
+                            android:id="@+id/ibtn_right"
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"

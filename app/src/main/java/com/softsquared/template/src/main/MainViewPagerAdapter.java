@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -19,6 +20,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -49,25 +51,25 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainViewPagerAdapter extends PagerAdapter {
     private static final String TAG = "AnimationStarter";
 
-    View view;
+
     private Context mContext = null;
+
     public MainViewPagerAdapter(Context context){
         mContext = context;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position){
-        view = null;
+        View view = null;
         int backColor = R.color.colorSoso;
         int cardColor = R.color.colorCardSoso;
         final InPageViewPagerAdapter mInPagePagerAdapter;
         final ViewPager mInPageViewPager;
-
-
-        final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho;
+        final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho, ibtnLeft, ibtnRight;
         final ImageView IvStatusImage;
         final Button BtnAnimation;
         final CircleIndicator indicator;
+        final TextView tv_myLocation;
 
 
         if (mContext != null) {
@@ -84,10 +86,40 @@ public class MainViewPagerAdapter extends PagerAdapter {
             indicator = view.findViewById(R.id.iv_oval);
             indicator.createIndicators(10,position);
             ibtnWho = view.findViewById(R.id.ibtn_who);
+            tv_myLocation = view.findViewById(R.id.tv_myLocation);
+            ibtnLeft = view.findViewById(R.id.ibtn_left);
+            ibtnRight = view .findViewById(R.id.ibtn_right);
+
+            tv_myLocation.setText("pageNum : " + position);
 
             mInPageViewPager = view.findViewById(R.id.vp_inPage);
+            mInPageViewPager.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
             mInPagePagerAdapter = new InPageViewPagerAdapter(mContext);
             mInPageViewPager.setAdapter(mInPagePagerAdapter);
+            mInPagePagerAdapter.addItem(0);
+            mInPagePagerAdapter.addItem(1);
+            mInPagePagerAdapter.notifyDataSetChanged();
+
+            ibtnLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()-1);
+                }
+            });
+
+            ibtnRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()+1);
+                }
+            });
+
 
             ibtnWho.setOnClickListener(new Button.OnClickListener() {
                 @Override
@@ -199,9 +231,8 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
         }
 
-        // 뷰페이저에 추가.
-        container.addView(view) ;
-
+        //Initialize the pager
+        container.addView(view);
         return view ;
     }
     @Override
@@ -215,15 +246,14 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-
         return (view == (View)object);
     }
 
-    private int getDisplayHeight(){
+    private int getDisplayHeight(View view){
         return view.getResources().getDisplayMetrics().heightPixels;
 
     }
-    private int getDisplayWidtht(){
+    private int getDisplayWidtht(View view){
         return view.getResources().getDisplayMetrics().widthPixels;
     }
 
