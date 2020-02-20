@@ -100,8 +100,21 @@ public class MainViewPagerAdapter extends PagerAdapter {
                     return false;
                 }
             });
+
+
+            mInPageViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int position){
+
+                    if(position < 2)
+                        mInPageViewPager.setCurrentItem((position + 2), true);
+                    else if(position >= 2 * 2)
+                        mInPageViewPager.setCurrentItem((position - 2), true);
+                }
+            });
             mInPagePagerAdapter = new InPageViewPagerAdapter(mContext);
             mInPageViewPager.setAdapter(mInPagePagerAdapter);
+
             mInPagePagerAdapter.addItem(0);
             mInPagePagerAdapter.addItem(1);
             mInPagePagerAdapter.notifyDataSetChanged();
@@ -109,14 +122,14 @@ public class MainViewPagerAdapter extends PagerAdapter {
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()-1);
+                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()-1, true);
                 }
             });
 
             ibtnRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()+1);
+                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()+1, true);
                 }
             });
 

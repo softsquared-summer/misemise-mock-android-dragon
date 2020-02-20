@@ -38,4 +38,6 @@ dependencies {
     // for
     implementation 'me.relex:circleindicator:2.1.4'
 
+
+
 }

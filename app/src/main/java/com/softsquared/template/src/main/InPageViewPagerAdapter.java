@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
 
@@ -18,16 +17,15 @@ import java.util.ArrayList;
 public class InPageViewPagerAdapter extends PagerAdapter {
     ArrayList<Integer> itemNums = new ArrayList<>();
     private Context mContext;
-    private ViewPager mPager = null;
     public InPageViewPagerAdapter(Context context){
         mContext = context;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position){
-
         View view;
         view = null;
+        position %= 2;
         int backColor = R.color.colorSoso;
         int cardColor = R.color.colorCardSoso;
 
@@ -55,7 +53,7 @@ public class InPageViewPagerAdapter extends PagerAdapter {
     }
     @Override
     public int getCount() {
-        return itemNums.size();
+        return 6;
     }
 
     @Override
