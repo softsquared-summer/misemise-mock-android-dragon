@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -164,6 +165,13 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
             mRecyclerPreDayAdapter.notifyDataSetChanged();
 
+            mRvPreTime.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
 
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
