@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80cbc4"
+    tools:context=".src.bookMark.activity.AddBookMarkActivity">
+    <RelativeLayout
+        android:background="#4cb6ac"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="50dp"
+        >
+        <ImageButton
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:src="@drawable/ic_back"
+            android:scaleType="fitCenter"
+            android:padding="20dp"
+            android:layout_alignParentLeft="true"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="60dp"
+            android:hint="동/읍/면 을 입력하세요"
+            android:textColorHint="#ffffff"
+
+            />
+
+        <ImageButton
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:src="@drawable/ic_cancel"
+            android:scaleType="fitCenter"
+            android:padding="20dp"
+            android:layout_alignParentRight="true"
+            />
+
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -21,15 +21,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
+import com.softsquared.template.src.bookMark.activity.BookMarkActivity;
 import com.softsquared.template.src.main.fragments.MapFragment;
 import com.softsquared.template.src.main.items.PreDayItem;
 import com.softsquared.template.src.main.items.PreTimeItem;
@@ -72,12 +71,13 @@ public class MainViewPagerAdapter extends PagerAdapter {
         final InPageViewPagerAdapter mInPagePagerAdapter;
         final RecyclerPreDayAdapter mRecyclerPreDayAdapter;
         final RecyclerPreTimeAdapter mRecyclerPreTimeAdapter;
+
 //        view group
         final RecyclerView mRvPreDay, mRvPreTime;
         final ViewPager mInPageViewPager;
 
 //        view
-        final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho, ibtnLeft, ibtnRight;
+        final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho, ibtnLeft, ibtnRight, ibtnBookMark;
         final ImageView IvStatusImage;
         final Button BtnAnimation;
         final TextView tv_myLocation;
@@ -86,7 +86,6 @@ public class MainViewPagerAdapter extends PagerAdapter {
         final CircleIndicator indicator;
         final MapFragment fragment1;
 
-
 //        fragment
         final FragmentManager fragmentManager;
         final FragmentTransaction fragmentTransaction = null;
@@ -94,8 +93,8 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
         if (mContext != null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.layout_page, container, false);
 
+            view = inflater.inflate(R.layout.layout_page, container, false);
             MapFragment mapFragment = new MapFragment();
 
             FragmentTransaction transaction = ((Activity)mContext).getFragmentManager().beginTransaction();
@@ -104,6 +103,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             transaction.commit();
 
             final View finalView = view;
+
             ibtnEight = view.findViewById(R.id.ibtn_eight);
             IbtnOpenDrawer = view.findViewById(R.id.ibtn_openDrawer);
             IvStatusImage = view.findViewById(R.id.iv_statusImage);
@@ -115,7 +115,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             tv_myLocation = view.findViewById(R.id.tv_myLocation);
             ibtnLeft = view.findViewById(R.id.ibtn_left);
             ibtnRight = view .findViewById(R.id.ibtn_right);
-
+            ibtnBookMark = view.findViewById(R.id.ibtn_bookMark);
             tv_myLocation.setText("pageNum : " + position);
 
             mInPageViewPager = view.findViewById(R.id.vp_inPage);
@@ -155,6 +155,9 @@ public class MainViewPagerAdapter extends PagerAdapter {
             mRvPreTime.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
 
+
+
+
             for(int i=0;i<14;i++){
                 mRecyclerPreDayAdapter.addItem(new PreDayItem("요일", "아침", "좋음"));
             }
@@ -162,8 +165,8 @@ public class MainViewPagerAdapter extends PagerAdapter {
                 mRecyclerPreTimeAdapter.addItem(new PreTimeItem("시간", "좋음"));
             }
 
-
             mRecyclerPreDayAdapter.notifyDataSetChanged();
+            mRecyclerPreTimeAdapter.notifyDataSetChanged();
 
             mRvPreTime.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -173,12 +176,22 @@ public class MainViewPagerAdapter extends PagerAdapter {
                 }
             });
 
+
+            ibtnBookMark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext.getApplicationContext(), BookMarkActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()+1, true);
                 }
             });
+
 
             ibtnRight.setOnClickListener(new View.OnClickListener() {
                 @Override

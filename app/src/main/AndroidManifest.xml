@@ -12,6 +12,7 @@
         android:name=".src.ApplicationClass"
         android:allowBackup="false"
         android:fullBackupContent="false"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
@@ -19,33 +20,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:targetApi="n"
-        android:hardwareAccelerated="false"
-        >
+        tools:targetApi="n">
+        <activity android:name=".src.bookMark.activity.AddBookMarkActivity"></activity>
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
-        <activity android:name=".src.main.TestActivity">
-
-        </activity>
+        <activity android:name=".src.main.TestActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBqcNM2_OmLUozSnj5-Da2PrqhHtRIU2-I" />
 
-        <activity android:name=".src.main.BookMarkActivity" />
+        <activity android:name=".src.bookMark.activity.BookMarkActivity" />
         <activity android:name=".src.main.sideBar.SideWho" />
         <activity android:name=".src.main.sideBar.SideSetting" />
         <activity android:name=".src.main.sideBar.SideEightStage" />
         <activity android:name=".src.main.sideBar.SideInfoActivity" />
         <activity android:name=".src.splash.SplashActivity" />
-        <activity android:name=".src.main.MainActivity">
+        <activity android:name=".src.main.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

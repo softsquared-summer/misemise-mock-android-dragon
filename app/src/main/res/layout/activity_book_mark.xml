@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".src.main.BookMarkActivity">
+    android:background="#80cbc4"
+    tools:context=".src.bookMark.activity.BookMarkActivity">
+    <RelativeLayout
+        android:id="@+id/rlo_bookMarkBar"
+        android:background="#4cb6ac"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/ibtn_backBookMarkToMain"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_back" />
+
+
+
+        <Button
+            android:id="@+id/ibtn_editBookMark"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#44a499"
+            android:scaleType="fitXY"
+            android:text="편집"
+            android:textColor="#ffffff"
+            />
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_bookMarkList"
+        android:layout_below="@id/rlo_bookMarkBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+    <Button
+        android:id="@+id/btn_add_book_mark"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:background="#ff5353"
+        android:layout_below="@id/rv_bookMarkList"
+        android:layout_centerHorizontal="true"
+        android:text="추가하기"
+        android:textColor="#ffffff"
+        >
+
+    </Button>
+
+
+</RelativeLayout>

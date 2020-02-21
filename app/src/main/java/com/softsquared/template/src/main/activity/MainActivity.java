@@ -1,4 +1,4 @@
-package com.softsquared.template.src.main;
+package com.softsquared.template.src.main.activity;
 
 import android.os.Bundle;
 
