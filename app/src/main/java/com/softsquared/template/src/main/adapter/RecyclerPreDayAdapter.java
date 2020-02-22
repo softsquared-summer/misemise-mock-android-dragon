@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,11 +14,11 @@ import com.softsquared.template.src.main.items.PreDayItem;
 
 import java.util.ArrayList;
 
-public class RecyclerPreDayAdapter extends RecyclerView.Adapter<RecyclerPreDayAdapter.ViewHolder>  {
+public class RecyclerPreDayAdapter extends RecyclerView.Adapter<RecyclerPreDayAdapter.ViewHolder> {
 
     private ArrayList<PreDayItem> mData = null;
 
-    RecyclerPreDayAdapter(ArrayList<PreDayItem> list){
+    RecyclerPreDayAdapter(ArrayList<PreDayItem> list) {
         mData = list;
     }
 
@@ -46,18 +45,20 @@ public class RecyclerPreDayAdapter extends RecyclerView.Adapter<RecyclerPreDayAd
     public int getItemCount() {
         return mData.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_day, tv_when, tv_state;
 
         ViewHolder(View itemView) {
-            super(itemView) ;
-            tv_day = itemView.findViewById(R.id.tv_day) ;
-            tv_when = itemView.findViewById(R.id.tv_when) ;
-            tv_state = itemView.findViewById(R.id.tv_state) ;
+            super(itemView);
+            tv_day = itemView.findViewById(R.id.tv_day);
+            tv_when = itemView.findViewById(R.id.tv_when);
+            tv_state = itemView.findViewById(R.id.tv_state);
         }
     }
-    public void addItem(PreDayItem ipt){
+
+    public void addItem(PreDayItem ipt) {
         mData.add(ipt);
     }
 }

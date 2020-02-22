@@ -19,14 +19,14 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
     private ArrayList<BookMarkItem> mData = null;
 
 
-    public RecyclerBookMarkAdapter(ArrayList<BookMarkItem> list){
+    public RecyclerBookMarkAdapter(ArrayList<BookMarkItem> list) {
         mData = list;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.layout_book_mark_item, parent, false);
         RecyclerBookMarkAdapter.ViewHolder vh = new RecyclerBookMarkAdapter.ViewHolder(view);
@@ -52,12 +52,13 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         TextView tvLocation, tvStatus;
 
         ViewHolder(View itemView) {
-            super(itemView) ;
-            tvLocation = itemView.findViewById(R.id.tv_book_mark_location) ;
-            tvStatus = itemView.findViewById(R.id.tv_book_mark_status) ;
+            super(itemView);
+            tvLocation = itemView.findViewById(R.id.tv_book_mark_location);
+            tvStatus = itemView.findViewById(R.id.tv_book_mark_status);
         }
     }
-    public void addItem(BookMarkItem ipt){
+
+    public void addItem(BookMarkItem ipt) {
         mData.add(ipt);
     }
 }

@@ -1,8 +1,14 @@
 <resources>
+
+    <!-- about -->
     <string name="app_name">미세미세(project)</string>
+    <string name="version">Ver 6.0.7</string>
+
+    <!-- network -->
     <string name="loading">로딩중입니다.</string>
     <string name="network_error">네트워크 연결이 원활하지 않습니다.</string>
-    <string name="version">Ver 6.0.7</string>
+
+
     <!-- sidebar-info -->
     <string name="sidebar_info_title_text_size">14dp</string>
     <string name="sidebar_info_contents_text_size">11dp</string>

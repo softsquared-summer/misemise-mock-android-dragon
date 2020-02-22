@@ -1,14 +1,14 @@
 package com.softsquared.template.src.bookMark.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.softsquared.template.R;
 import com.softsquared.template.src.bookMark.adapter.RecyclerBookMarkAdapter;
@@ -33,7 +33,7 @@ public class BookMarkActivity extends AppCompatActivity {
         mRecyclerBookMarkAdapter = new RecyclerBookMarkAdapter(mAlBookMarkList);
         rvBookMark.setAdapter(mRecyclerBookMarkAdapter);
         rvBookMark.setLayoutManager(new LinearLayoutManager(this));
-        for(int i=0;i<3;i++){
+        for (int i = 0; i < 3; i++) {
             mRecyclerBookMarkAdapter.addItem(new BookMarkItem("지역", "상태"));
         }
 

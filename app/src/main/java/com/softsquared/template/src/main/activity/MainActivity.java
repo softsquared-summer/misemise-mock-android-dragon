@@ -1,28 +1,26 @@
 package com.softsquared.template.src.main.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
-import com.softsquared.template.src.BaseActivity;
 import com.softsquared.template.src.main.adapter.MainViewPagerAdapter;
-import com.softsquared.template.src.main.interfaces.MainActivityView;
+import com.softsquared.template.src.splash.SplashActivity;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private MainViewPagerAdapter mPagerAdapter;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+        startActivity(intent);
         setContentView(R.layout.activity_main);
 //        boolean hasPermission = (ContextCompat.checkSelfPermission(getApplicationContext(),
 //                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
@@ -47,7 +45,6 @@ public class MainActivity extends AppCompatActivity  {
         mViewPager.setAdapter(mPagerAdapter);
         // mViewPager.setOffscreenPageLimit(10);
     }
-
 
 
 //    @Override

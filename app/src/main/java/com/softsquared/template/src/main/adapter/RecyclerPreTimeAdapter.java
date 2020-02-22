@@ -4,23 +4,23 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.softsquared.template.R;
-import com.softsquared.template.src.main.items.PreDayItem;
 import com.softsquared.template.src.main.items.PreTimeItem;
 
 import java.util.ArrayList;
+
 public class RecyclerPreTimeAdapter extends RecyclerView.Adapter<RecyclerPreTimeAdapter.ViewHolder> {
     private ArrayList<PreTimeItem> mData = null;
 
-    RecyclerPreTimeAdapter(ArrayList<PreTimeItem> list){
+    RecyclerPreTimeAdapter(ArrayList<PreTimeItem> list) {
         mData = list;
     }
+
     @Override
     public RecyclerPreTimeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -43,17 +43,19 @@ public class RecyclerPreTimeAdapter extends RecyclerView.Adapter<RecyclerPreTime
     public int getItemCount() {
         return mData.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_time, tv_state;
 
         ViewHolder(View itemView) {
-            super(itemView) ;
-            tv_time = itemView.findViewById(R.id.tv_timePreTime) ;
-            tv_state = itemView.findViewById(R.id.tv_TimePreState) ;
+            super(itemView);
+            tv_time = itemView.findViewById(R.id.tv_timePreTime);
+            tv_state = itemView.findViewById(R.id.tv_TimePreState);
         }
     }
-    public void addItem(PreTimeItem ipt){
+
+    public void addItem(PreTimeItem ipt) {
         mData.add(ipt);
     }
 }

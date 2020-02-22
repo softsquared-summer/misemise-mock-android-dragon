@@ -36,7 +36,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View layout = inflater.inflate(R.layout.layout_map, container, false);
 
         mapView = (MapView) layout.findViewById(R.id.map);
-         mapView.getMapAsync(this);
+        mapView.getMapAsync(this);
 
         return layout;
     }
@@ -44,7 +44,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onStart() {
-        Log.e("MainViewPagerAdapter","onStart()");
+        Log.e("MainViewPagerAdapter", "onStart()");
         mapView.onStart();
         super.onStart();
     }
@@ -113,8 +113,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
     }
-
-
 
 
 }

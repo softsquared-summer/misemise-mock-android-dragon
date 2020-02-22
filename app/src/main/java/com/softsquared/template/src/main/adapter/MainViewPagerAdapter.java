@@ -18,6 +18,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,16 +50,16 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class MainViewPagerAdapter extends PagerAdapter {
     private static final String TAG = "AnimationStarter";
-   
 
+    boolean updateFlag = true;
     private Context mContext = null;
 
-    public MainViewPagerAdapter(Context context){
+    public MainViewPagerAdapter(Context context) {
         mContext = context;
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position){
+    public Object instantiateItem(ViewGroup container, int position) {
         View view = null;
         int backColor = R.color.colorSoso;
         int cardColor = R.color.colorCardSoso;
@@ -79,8 +80,8 @@ public class MainViewPagerAdapter extends PagerAdapter {
 //        view
         final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho, ibtnLeft, ibtnRight, ibtnBookMark;
         final ImageView IvStatusImage;
-        final Button BtnAnimation;
         final TextView tv_myLocation;
+        final RelativeLayout rloStatusLayout;
 
 //        indicator
         final CircleIndicator indicator;
@@ -92,33 +93,38 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
 
         if (mContext != null) {
+
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             view = inflater.inflate(R.layout.layout_page, container, false);
             MapFragment mapFragment = new MapFragment();
 
-            FragmentTransaction transaction = ((Activity)mContext).getFragmentManager().beginTransaction();
+            FragmentTransaction transaction = ((Activity) mContext).getFragmentManager().beginTransaction();
             transaction.add(R.id.llo_fragment, mapFragment);
             transaction.addToBackStack(null);
             transaction.commit();
 
             final View finalView = view;
-
+            rloStatusLayout = view.findViewById(R.id.rlo_statusLayout);
             ibtnEight = view.findViewById(R.id.ibtn_eight);
             IbtnOpenDrawer = view.findViewById(R.id.ibtn_openDrawer);
             IvStatusImage = view.findViewById(R.id.iv_statusImage);
-            BtnAnimation = view.findViewById(R.id.btn_animation);
             ibtnShare = view.findViewById(R.id.ibtn_share);
             indicator = view.findViewById(R.id.iv_oval);
-            indicator.createIndicators(10,position);
+            indicator.createIndicators(6, position);
             ibtnWho = view.findViewById(R.id.ibtn_who);
             tv_myLocation = view.findViewById(R.id.tv_myLocation);
             ibtnLeft = view.findViewById(R.id.ibtn_left);
-            ibtnRight = view .findViewById(R.id.ibtn_right);
+            ibtnRight = view.findViewById(R.id.ibtn_right);
             ibtnBookMark = view.findViewById(R.id.ibtn_bookMark);
             tv_myLocation.setText("pageNum : " + position);
 
             mInPageViewPager = view.findViewById(R.id.vp_inPage);
+            if(updateFlag){
+                goAnimation(IvStatusImage);
+//                updateFlag = false;
+            }
+
             mInPageViewPager.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -130,10 +136,10 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
             mInPageViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
-                public void onPageSelected(int position){
-                    if(position < 2)
+                public void onPageSelected(int position) {
+                    if (position < 2)
                         mInPageViewPager.setCurrentItem((position + 2), true);
-                    else if(position >= 2 * 2)
+                    else if (position >= 2 * 2)
                         mInPageViewPager.setCurrentItem((position - 2), true);
                 }
             });
@@ -155,13 +161,10 @@ public class MainViewPagerAdapter extends PagerAdapter {
             mRvPreTime.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
 
-
-
-
-            for(int i=0;i<14;i++){
+            for (int i = 0; i < 14; i++) {
                 mRecyclerPreDayAdapter.addItem(new PreDayItem("요일", "아침", "좋음"));
             }
-            for(int i=0;i<14;i++){
+            for (int i = 0; i < 14; i++) {
                 mRecyclerPreTimeAdapter.addItem(new PreTimeItem("시간", "좋음"));
             }
 
@@ -188,7 +191,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()+1, true);
+                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem() + 1, true);
                 }
             });
 
@@ -196,7 +199,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             ibtnRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem()+1, true);
+                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem() + 1, true);
                 }
             });
 
@@ -228,6 +231,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             });
             ibtnShare.setOnClickListener(new Button.OnClickListener() {
                 String path;
+
                 @Override
                 public void onClick(View v) {
 //
@@ -259,50 +263,13 @@ public class MainViewPagerAdapter extends PagerAdapter {
                     mContext.startActivity(intent);
                 }
             });
-            BtnAnimation.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IvStatusImage.clearAnimation();
-                    TranslateAnimation transAnim = new TranslateAnimation(0, 0, -500,
-                            IvStatusImage.getTop());
-                    transAnim.setStartOffset(500);
-                    transAnim.setDuration(3000);
-                    transAnim.setFillAfter(true);
-                    transAnim.setInterpolator(new BounceInterpolator());
-                    transAnim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            Log.i(TAG, "Starting button dropdown animation");
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            Log.i(TAG,
-                                    "Ending button dropdown animation. Clearing animation and setting layout");
-                            IvStatusImage.clearAnimation();
-                            final int left = IvStatusImage.getLeft();
-                            final int top = IvStatusImage.getTop();
-                            final int right = IvStatusImage.getRight();
-                            final int bottom = IvStatusImage.getBottom();
-                            IvStatusImage.layout(left, top, right, bottom);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    IvStatusImage.startAnimation(transAnim);
-                }
-            });
-
 
 
             IbtnOpenDrawer.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DrawerLayout drawer = (DrawerLayout) finalView.findViewById(R.id.dlo_drawer);
-                    if(!drawer.isDrawerOpen(Gravity.LEFT)){
+                    if (!drawer.isDrawerOpen(Gravity.LEFT)) {
                         drawer.openDrawer(Gravity.LEFT);
                     }
                 }
@@ -313,31 +280,68 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
         //Initialize the pager
         container.addView(view);
-        return view ;
+        return view;
     }
+
+    public void goAnimation(final ImageView IvStatusImage){
+        IvStatusImage.clearAnimation();
+        TranslateAnimation transAnim = new TranslateAnimation(0, 0, -500,
+                IvStatusImage.getTop());
+        transAnim.setStartOffset(100);
+        transAnim.setDuration(1000);
+        transAnim.setFillAfter(true);
+        transAnim.setInterpolator(new BounceInterpolator());
+        transAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                Log.i(TAG, "Starting button dropdown animation");
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Log.i(TAG,
+                        "Ending button dropdown animation. Clearing animation and setting layout");
+                IvStatusImage.clearAnimation();
+                final int left = IvStatusImage.getLeft();
+                final int top = IvStatusImage.getTop();
+                final int right = IvStatusImage.getRight();
+                final int bottom = IvStatusImage.getBottom();
+                IvStatusImage.layout(left, top, right, bottom);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        IvStatusImage.startAnimation(transAnim);
+    }
+
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object){
+    public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
+
     @Override
     public int getCount() {
-        return 10;
+        return 6;
     }
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return (view == (View)object);
+        return (view == (View) object);
     }
 
-    private int getDisplayHeight(View view){
+    private int getDisplayHeight(View view) {
         return view.getResources().getDisplayMetrics().heightPixels;
 
     }
-    private int getDisplayWidtht(View view){
+
+    private int getDisplayWidtht(View view) {
         return view.getResources().getDisplayMetrics().widthPixels;
     }
 
-    public static String saveBitmap(String filename, Bitmap bm,int quality,Context mContext) throws IOException {
+    public static String saveBitmap(String filename, Bitmap bm, int quality, Context mContext) throws IOException {
         File f = new File(mContext.getCacheDir(), filename);
         f.createNewFile();
 
