@@ -21,18 +21,19 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
-        <activity android:name=".src.bookMark.activity.AddBookMarkActivity"></activity>
+
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".src.main.TestActivity"></activity>
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBqcNM2_OmLUozSnj5-Da2PrqhHtRIU2-I" />
 
+        <activity android:name=".src.bookMark.activity.AddBookMarkActivity"></activity>
         <activity android:name=".src.bookMark.activity.BookMarkActivity" />
         <activity android:name=".src.main.sideBar.SideWho" />
         <activity android:name=".src.main.sideBar.SideSetting" />
@@ -42,7 +43,6 @@
         <activity android:name=".src.main.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

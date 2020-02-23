@@ -51,8 +51,8 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainViewPagerAdapter extends PagerAdapter {
     private static final String TAG = "AnimationStarter";
 
-    boolean updateFlag = true;
-    private Context mContext = null;
+    boolean mUpdateFlag = true;
+    private Context mContext;
 
     public MainViewPagerAdapter(Context context) {
         mContext = context;
@@ -60,6 +60,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        System.out.println("로딩" + position);
         View view = null;
         int backColor = R.color.colorSoso;
         int cardColor = R.color.colorCardSoso;
@@ -78,7 +79,8 @@ public class MainViewPagerAdapter extends PagerAdapter {
         final ViewPager mInPageViewPager;
 
 //        view
-        final ImageButton IbtnOpenDrawer, ibtnInfo, ibtnShare, ibtnEight, ibtnSetting, ibtnWho, ibtnLeft, ibtnRight, ibtnBookMark;
+        final ImageButton ibtnLeft, ibtnRight;
+
         final ImageView IvStatusImage;
         final TextView tv_myLocation;
         final RelativeLayout rloStatusLayout;
@@ -106,23 +108,19 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
             final View finalView = view;
             rloStatusLayout = view.findViewById(R.id.rlo_statusLayout);
-            ibtnEight = view.findViewById(R.id.ibtn_eight);
-            IbtnOpenDrawer = view.findViewById(R.id.ibtn_openDrawer);
             IvStatusImage = view.findViewById(R.id.iv_statusImage);
-            ibtnShare = view.findViewById(R.id.ibtn_share);
             indicator = view.findViewById(R.id.iv_oval);
-            indicator.createIndicators(6, position);
-            ibtnWho = view.findViewById(R.id.ibtn_who);
+//            indicator.createIndicators(1, position);
+
             tv_myLocation = view.findViewById(R.id.tv_myLocation);
             ibtnLeft = view.findViewById(R.id.ibtn_left);
             ibtnRight = view.findViewById(R.id.ibtn_right);
-            ibtnBookMark = view.findViewById(R.id.ibtn_bookMark);
             tv_myLocation.setText("pageNum : " + position);
 
             mInPageViewPager = view.findViewById(R.id.vp_inPage);
-            if(updateFlag){
+            if(mUpdateFlag){
                 goAnimation(IvStatusImage);
-//                updateFlag = false;
+//                mUpdateFlag = false;
             }
 
             mInPageViewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -180,13 +178,6 @@ public class MainViewPagerAdapter extends PagerAdapter {
             });
 
 
-            ibtnBookMark.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext.getApplicationContext(), BookMarkActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
 
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -204,36 +195,13 @@ public class MainViewPagerAdapter extends PagerAdapter {
             });
 
 
-            ibtnWho.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), SideWho.class);
-                    mContext.startActivity(intent);
-                }
-            });
 
-            ibtnSetting = view.findViewById(R.id.ibtn_setting);
-            ibtnSetting.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), SideSetting.class);
-                    mContext.startActivity(intent);
-                }
-            });
 
-            ibtnInfo = view.findViewById(R.id.btn_info);
-            ibtnEight.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), SideEightStage.class);
-                    mContext.startActivity(intent);
-                }
-            });
-            ibtnShare.setOnClickListener(new Button.OnClickListener() {
-                String path;
-
-                @Override
-                public void onClick(View v) {
+//            ibtnShare.setOnClickListener(new Button.OnClickListener() {
+//                String path;
+//
+//                @Override
+//                public void onClick(View v) {
 //
 //                    View container = ((Activity)mContext).getWindow().getDecorView();
 //                    container.buildDrawingCache();
@@ -253,27 +221,13 @@ public class MainViewPagerAdapter extends PagerAdapter {
 //                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                    intent.setType("image/*");
 //                    mContext.startActivity(Intent.createChooser(intent, "공유하기"));
-                }
-            });
-
-            ibtnInfo.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), SideInfoActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
+//                }
+//            });
 
 
-            IbtnOpenDrawer.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DrawerLayout drawer = (DrawerLayout) finalView.findViewById(R.id.dlo_drawer);
-                    if (!drawer.isDrawerOpen(Gravity.LEFT)) {
-                        drawer.openDrawer(Gravity.LEFT);
-                    }
-                }
-            });
+
+
+
 
 
         }

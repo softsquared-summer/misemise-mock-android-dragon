@@ -2,19 +2,31 @@ package com.softsquared.template.src.main.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.softsquared.template.R;
+import com.softsquared.template.src.BaseActivity;
+import com.softsquared.template.src.bookMark.activity.BookMarkActivity;
 import com.softsquared.template.src.main.adapter.MainViewPagerAdapter;
+import com.softsquared.template.src.main.sideBar.SideEightStage;
+import com.softsquared.template.src.main.sideBar.SideInfoActivity;
+import com.softsquared.template.src.main.sideBar.SideSetting;
+import com.softsquared.template.src.main.sideBar.SideWho;
 import com.softsquared.template.src.splash.SplashActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private ViewPager mViewPager;
     private MainViewPagerAdapter mPagerAdapter;
-
+    private ImageButton mIbtnOpenDrawer, mIbtnShare, mIbtnBookMark;
+    private ImageButton mIbtnInfo, mIbtnEight, mIbtnSetting, mIbtnWho;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,40 +34,64 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
         startActivity(intent);
         setContentView(R.layout.activity_main);
-//        boolean hasPermission = (ContextCompat.checkSelfPermission(getApplicationContext(),
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-//        if (!hasPermission) {
-//            //ask permission
-//            ActivityCompat.requestPermissions(MainActivity.this,
-//                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                    1);
-//            Log.i("권한", "없어서 가져왔다");
-//        }else{
-//            Log.i("권한", "있다");
-//            String folder = "CAPTURE_TEST";
-//            File dirs = new File(Environment.getExternalStorageDirectory(), folder);
-//            boolean checker = dirs.mkdirs();
-//            if(!dirs.exists()){
-//                dirs.mkdirs();
-//            }
-//        }
+
+        mViewPager = findViewById(R.id.viewPager);
+        mIbtnInfo = findViewById(R.id.btn_info);
+        mIbtnEight = findViewById(R.id.ibtn_eight);
+        mIbtnWho = findViewById(R.id.ibtn_who);
+        mIbtnSetting = findViewById(R.id.ibtn_setting);
+        mIbtnOpenDrawer = findViewById(R.id.ibtn_openDrawer);
+        mIbtnShare = findViewById(R.id.ibtn_share);
+        mIbtnBookMark = findViewById(R.id.ibtn_bookMark);
 
         mViewPager = findViewById(R.id.viewPager);
         mPagerAdapter = new MainViewPagerAdapter(this);
         mViewPager.setAdapter(mPagerAdapter);
-        // mViewPager.setOffscreenPageLimit(10);
+        mIbtnBookMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), BookMarkActivity.class);
+                startActivity(intent);
+            }
+        });
+        mIbtnOpenDrawer.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dlo_drawer);
+                if (!drawer.isDrawerOpen(Gravity.LEFT)) {
+                    drawer.openDrawer(Gravity.LEFT);
+                }
+            }
+        });
+        mIbtnWho.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SideWho.class);
+                startActivity(intent);
+            }
+        });
+        mIbtnSetting.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SideSetting.class);
+                startActivity(intent);
+            }
+        });
+        mIbtnEight.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SideEightStage.class);
+                startActivity(intent);
+            }
+        });
+        mIbtnInfo.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SideInfoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
-//    @Override
-//    public void validateSuccess(String text) {
-//        hideProgressDialog();
-//
-//    }
-//
-//    @Override
-//    public void validateFailure(@Nullable String message) {
-//        hideProgressDialog();
-//        showCustomToast(message == null || message.isEmpty() ? getString(R.string.network_error) : message);
-//    }
 }
