@@ -1,7 +1,9 @@
 package com.softsquared.template.src.main;
 
+import android.util.Log;
+
 import com.softsquared.template.src.main.interfaces.MainRetrofitInterface;
-import com.softsquared.template.src.main.models.DefaultResponse;
+import com.softsquared.template.src.main.models.RegionResponse;
 import com.softsquared.template.src.main.interfaces.MainActivityView;
 
 import retrofit2.Call;
@@ -10,30 +12,35 @@ import retrofit2.Response;
 
 import static com.softsquared.template.src.ApplicationClass.getRetrofit;
 
-class MainService {
+public class MainService {
     private final MainActivityView mMainActivityView;
 
-    MainService(final MainActivityView mainActivityView) {
+
+    public MainService(final MainActivityView mainActivityView) {
         this.mMainActivityView = mainActivityView;
     }
 
-    void getTest() {
+    public void getRegion(final String region, final int idx) {
         final MainRetrofitInterface mainRetrofitInterface = getRetrofit().create(MainRetrofitInterface.class);
-        mainRetrofitInterface.getTest().enqueue(new Callback<DefaultResponse>() {
+        mainRetrofitInterface.getRegion(region).enqueue(new Callback<RegionResponse>() {
             @Override
-            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
-                final DefaultResponse defaultResponse = response.body();
-                if (defaultResponse == null) {
+            public void onResponse(Call<RegionResponse> call, Response<RegionResponse> response) {
+                final RegionResponse regionResponse = response.body();
+                if (regionResponse == null) {
                     mMainActivityView.validateFailure(null);
                     return;
                 }
 
-                mMainActivityView.validateSuccess(defaultResponse.getMessage());
+                Log.e("onResponse", "응답");
+                mMainActivityView.validateSuccess(regionResponse.getMessage());
+                mMainActivityView.getRegionCode(regionResponse.getCode());
+                mMainActivityView.getRegionResult(regionResponse.getResult(), region, idx);
             }
 
             @Override
-            public void onFailure(Call<DefaultResponse> call, Throwable t) {
+            public void onFailure(Call<RegionResponse> call, Throwable t) {
                 mMainActivityView.validateFailure(null);
+                Log.e("onFailure", t.getLocalizedMessage());
             }
         });
     }

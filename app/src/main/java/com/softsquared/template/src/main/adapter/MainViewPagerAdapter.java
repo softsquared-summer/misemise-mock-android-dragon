@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,34 +16,35 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.softsquared.template.R;
-import com.softsquared.template.src.bookMark.activity.BookMarkActivity;
+import com.softsquared.template.src.BookMarkData;
+import com.softsquared.template.src.bookMark.models.BookMarkResponse;
+import com.softsquared.template.src.main.MainService;
 import com.softsquared.template.src.main.fragments.MapFragment;
+import com.softsquared.template.src.main.interfaces.MainActivityView;
 import com.softsquared.template.src.main.items.PreDayItem;
 import com.softsquared.template.src.main.items.PreTimeItem;
-import com.softsquared.template.src.main.sideBar.SideEightStage;
-import com.softsquared.template.src.main.sideBar.SideInfoActivity;
-import com.softsquared.template.src.main.sideBar.SideSetting;
-import com.softsquared.template.src.main.sideBar.SideWho;
+import com.softsquared.template.src.main.models.RegionResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -50,9 +52,10 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class MainViewPagerAdapter extends PagerAdapter {
     private static final String TAG = "AnimationStarter";
-
+    View view = null;
     boolean mUpdateFlag = true;
     private Context mContext;
+    ArrayList<BookMarkData> mAlBookMarkData = new ArrayList<>();
 
     public MainViewPagerAdapter(Context context) {
         mContext = context;
@@ -61,7 +64,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         System.out.println("로딩" + position);
-        View view = null;
+
         int backColor = R.color.colorSoso;
         int cardColor = R.color.colorCardSoso;
 
@@ -69,7 +72,9 @@ public class MainViewPagerAdapter extends PagerAdapter {
         ArrayList<PreDayItem> mAlPreDayList = new ArrayList<PreDayItem>();
         ArrayList<PreTimeItem> mAlPreTimeList = new ArrayList<PreTimeItem>();
 
+
 //        adapter
+
         final InPageViewPagerAdapter mInPagePagerAdapter;
         final RecyclerPreDayAdapter mRecyclerPreDayAdapter;
         final RecyclerPreTimeAdapter mRecyclerPreTimeAdapter;
@@ -95,33 +100,34 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
 
         if (mContext != null) {
-
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             view = inflater.inflate(R.layout.layout_page, container, false);
             MapFragment mapFragment = new MapFragment();
-
             FragmentTransaction transaction = ((Activity) mContext).getFragmentManager().beginTransaction();
             transaction.add(R.id.llo_fragment, mapFragment);
-            transaction.addToBackStack(null);
             transaction.commit();
 
             final View finalView = view;
             rloStatusLayout = view.findViewById(R.id.rlo_statusLayout);
             IvStatusImage = view.findViewById(R.id.iv_statusImage);
             indicator = view.findViewById(R.id.iv_oval);
-//            indicator.createIndicators(1, position);
+            indicator.createIndicators(getCount(), position);
 
             tv_myLocation = view.findViewById(R.id.tv_myLocation);
             ibtnLeft = view.findViewById(R.id.ibtn_left);
             ibtnRight = view.findViewById(R.id.ibtn_right);
             tv_myLocation.setText("pageNum : " + position);
+            GradientDrawable rounding_drawable = (GradientDrawable) mContext.getDrawable(R.drawable.image_rounding);
 
             mInPageViewPager = view.findViewById(R.id.vp_inPage);
-            if(mUpdateFlag){
+            if (mUpdateFlag) { // 애니메이션을 위한 플래그 설정
                 goAnimation(IvStatusImage);
 //                mUpdateFlag = false;
             }
+
+            BookMarkData bookMarkData = mAlBookMarkData.get(position);
+
 
             mInPageViewPager.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -132,21 +138,22 @@ public class MainViewPagerAdapter extends PagerAdapter {
             });
 
 
-            mInPageViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                @Override
-                public void onPageSelected(int position) {
-                    if (position < 2)
-                        mInPageViewPager.setCurrentItem((position + 2), true);
-                    else if (position >= 2 * 2)
-                        mInPageViewPager.setCurrentItem((position - 2), true);
-                }
-            });
-            mInPagePagerAdapter = new InPageViewPagerAdapter(mContext);
-            mInPageViewPager.setAdapter(mInPagePagerAdapter);
 
-            mInPagePagerAdapter.addItem(0);
-            mInPagePagerAdapter.addItem(1);
-            mInPagePagerAdapter.notifyDataSetChanged();
+
+//            mInPageViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+//                @Override
+//                public void onPageSelected(int position) {
+//                    if (position < 2)
+//                        mInPageViewPager.setCurrentItem((position + 2), true);
+//                    else if (position >= 2 * 2)
+//                        mInPageViewPager.setCurrentItem((position - 2), true);
+//                }
+//            });
+
+            bookMarkData.mInPagePagerAdapter = new InPageViewPagerAdapter(mContext);
+            mInPageViewPager.setAdapter( bookMarkData.mInPagePagerAdapter );
+
+
 
             mRvPreDay = view.findViewById(R.id.rv_preDay);
             mRecyclerPreDayAdapter = new RecyclerPreDayAdapter(mAlPreDayList);
@@ -178,11 +185,10 @@ public class MainViewPagerAdapter extends PagerAdapter {
             });
 
 
-
             ibtnLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem() + 1, true);
+                    mInPageViewPager.setCurrentItem((mInPageViewPager.getCurrentItem() + 1)%2, true);
                 }
             });
 
@@ -190,46 +196,18 @@ public class MainViewPagerAdapter extends PagerAdapter {
             ibtnRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mInPageViewPager.setCurrentItem(mInPageViewPager.getCurrentItem() + 1, true);
+                    mInPageViewPager.setCurrentItem((mInPageViewPager.getCurrentItem() + 1)%2, true);
                 }
             });
 
-
-
-
-//            ibtnShare.setOnClickListener(new Button.OnClickListener() {
-//                String path;
-//
-//                @Override
-//                public void onClick(View v) {
-//
-//                    View container = ((Activity)mContext).getWindow().getDecorView();
-//                    container.buildDrawingCache();
-//                    Bitmap bm = container.getDrawingCache();
-//                    String fileName = "image_" + System.currentTimeMillis();
-//
-//                    try {
-//                        path = saveBitmap(fileName, bm, 30, mContext);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-////                    Uri uri = Uri.fromFile(new File(path));
-//                    Uri uri = FileProvider.getUriForFile(mContext, mContext.getApplicationContext().getPackageName() , new File(path));
-//                    Intent intent = new Intent(Intent.ACTION_SEND);
-//                    intent.putExtra(Intent.EXTRA_STREAM, uri);
-//                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                    intent.setType("image/*");
-//                    mContext.startActivity(Intent.createChooser(intent, "공유하기"));
-//                }
-//            });
-
-
-
-
-
-
-
+            //여기부터 데이터 세팅 해주기
+            BookMarkData curData = mAlBookMarkData.get(position);
+            TextView tv_myLoc = view.findViewById(R.id.tv_myLocation);
+            TextView tv_o3 = view.findViewById(R.id.tv_details_o3);
+            tv_myLoc.setText(curData.getLocation_name());
+            tv_o3.setText(curData.getO3_status());
+            String curName = curData.getLocation_name();
+//            getRegion(curName);
         }
 
         //Initialize the pager
@@ -237,7 +215,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
         return view;
     }
 
-    public void goAnimation(final ImageView IvStatusImage){
+    public void goAnimation(final ImageView IvStatusImage) {
         IvStatusImage.clearAnimation();
         TranslateAnimation transAnim = new TranslateAnimation(0, 0, -500,
                 IvStatusImage.getTop());
@@ -278,21 +256,12 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return 6;
+        return mAlBookMarkData.size();
     }
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return (view == (View) object);
-    }
-
-    private int getDisplayHeight(View view) {
-        return view.getResources().getDisplayMetrics().heightPixels;
-
-    }
-
-    private int getDisplayWidtht(View view) {
-        return view.getResources().getDisplayMetrics().widthPixels;
     }
 
     public static String saveBitmap(String filename, Bitmap bm, int quality, Context mContext) throws IOException {
@@ -322,4 +291,57 @@ public class MainViewPagerAdapter extends PagerAdapter {
         return f.getAbsolutePath();
     }
 
+    public ArrayList<BookMarkData> getBookMarkList() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString("bookMark", "");
+        Type type = new TypeToken<ArrayList<BookMarkData>>() {
+        }.getType();
+        ArrayList<BookMarkData> arrayList = gson.fromJson(json, type);
+        if (arrayList == null) arrayList = new ArrayList<>();
+        return arrayList;
+    }
+
+    public void saveBookMarkList(ArrayList<BookMarkData> bookMarkList) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
+        SharedPreferences.Editor editor = pref.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(bookMarkList);
+        editor.putString("bookMark", json);
+        editor.commit();
+    }
+
+    public int addItem(BookMarkData bookMarkData){
+        int ret = mAlBookMarkData.size();
+        mAlBookMarkData.add(bookMarkData);
+        return ret;
+    }
+
+    public BookMarkData getItem(int pos){
+        return mAlBookMarkData.get(pos);
+    }
+
+
+    public void setRegionStatus(int pos, RegionResponse.result result) {
+        BookMarkData bookMarkData = mAlBookMarkData.get(pos);
+
+        result.setCo_value((float)10);
+        result.setNo2_value((float)10);
+        result.setO3_value((float)10);
+        result.setPm10_value(10);
+        result.setPm25_value(10);
+        result.setSo2_value((float)10);
+        result.setTotal_value(10);
+        if(bookMarkData.mInPagePagerAdapter != null)
+            bookMarkData.mInPagePagerAdapter.infos = new ArrayList<Float>();
+        bookMarkData.mInPagePagerAdapter.addItem((float)result.getPm10_value());
+        bookMarkData.mInPagePagerAdapter.addItem((float)result.getPm25_value());
+        bookMarkData.mInPagePagerAdapter.addItem((float)result.getNo2_value());
+        bookMarkData.mInPagePagerAdapter.addItem((float)result.getO3_value());
+        bookMarkData.mInPagePagerAdapter.addItem((float)result.getCo_value());
+        bookMarkData.mInPagePagerAdapter.addItem((float)result.getSo2_value());
+
+        //bookMarkData.setRegionResponse_result(result);
+        mAlBookMarkData.get(pos).mInPagePagerAdapter.myNotifyDataSetChanged();
+    }
 }

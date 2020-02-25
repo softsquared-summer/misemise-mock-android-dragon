@@ -45,6 +45,7 @@
                         android:layout_weight="1"
                         />
                     <TextView
+                        android:id="@+id/tv_item1_value"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:textAlignment="center"
@@ -81,6 +82,7 @@
                         android:textColor="#ffffff"
                         />
                     <TextView
+                        android:id="@+id/tv_item2_value"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:textAlignment="center"
@@ -117,6 +119,7 @@
                         android:textColor="#ffffff"
                         />
                     <TextView
+                        android:id="@+id/tv_item3_value"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:textAlignment="center"

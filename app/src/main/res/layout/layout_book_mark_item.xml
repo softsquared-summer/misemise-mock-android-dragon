@@ -1,47 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="60dp"
+    android:id="@+id/rlo_container"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="5dp"
+    android:padding="2dp"
+    android:clipChildren="true"
+    android:background="@drawable/ripple"
+
+    >
+
+    <CheckBox
+        android:id="@+id/cb_book_mark_list_checker"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="-20dp"
+        android:background="@drawable/selector_book_mark"
+        android:button="@android:color/transparent"
+        />
 
     <TextView
         android:id="@+id/tv_book_mark_location"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:text="위치"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        />
-    <RelativeLayout
+        android:text="위치" />
 
+    <RelativeLayout
+        android:id="@+id/rlo_book_mark_image"
         android:layout_width="70dp"
         android:layout_height="match_parent"
-
-        android:layout_marginVertical="10dp"
-        android:background="@color/colorSoso"
         android:layout_alignParentRight="true"
+        android:layout_marginVertical="10dp"
         android:layout_marginRight="5dp"
-        >
+        android:background="@color/colorSoso">
+
         <ImageView
-            android:layout_marginTop="5dp"
-            android:id="@+id/iv_status"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_wink"
+            android:id="@+id/iv_status_in_book_mark"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="5dp"
             android:layout_centerHorizontal="true"
-            />
+            android:src="@drawable/ic_wink" />
+
         <TextView
             android:id="@+id/tv_book_mark_status"
             android:layout_width="25dp"
             android:layout_height="15dp"
-            android:textAlignment="center"
-            android:textSize="10dp"
-            android:layout_below="@id/iv_status"
+            android:layout_below="@id/iv_status_in_book_mark"
             android:layout_centerHorizontal="true"
             android:text="위치"
-
+            android:textAlignment="center"
             android:textColor="#ffffff"
-            />
+
+            android:textSize="10dp" />
     </RelativeLayout>
+    <ImageButton
+        android:background="#00000000"
+        android:id="@+id/iv_upDownChange"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_change_up_down"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="-30dp"
+        />
 
 
 </RelativeLayout>

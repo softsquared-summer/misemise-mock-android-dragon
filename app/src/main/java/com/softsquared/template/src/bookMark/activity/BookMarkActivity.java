@@ -2,41 +2,66 @@ package com.softsquared.template.src.bookMark.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.softsquared.template.R;
+import com.softsquared.template.src.BaseActivity;
+import com.softsquared.template.src.BookMarkData;
 import com.softsquared.template.src.bookMark.adapter.RecyclerBookMarkAdapter;
-import com.softsquared.template.src.main.items.BookMarkItem;
 
 import java.util.ArrayList;
 
-public class BookMarkActivity extends AppCompatActivity {
-    private ImageButton mBtnBack;
-    private RecyclerBookMarkAdapter mRecyclerBookMarkAdapter;
-    private ArrayList<BookMarkItem> mAlBookMarkList = new ArrayList<BookMarkItem>();
+public class BookMarkActivity extends BaseActivity {
+    private ImageButton mBtnBack, mIbtn_deleteBookMark;
+    public RecyclerBookMarkAdapter mRecyclerBookMarkAdapter;
+    private ArrayList<BookMarkData> mAlBookMarkDataList = new ArrayList<BookMarkData>();
     private RecyclerView rvBookMark;
-    private Button mbtnAddBookMark;
-
+    private TextView mTv_howManySelected;
+    private Button mbtnAddBookMark, mEditBookMark;
+    public Boolean editMode;
+    boolean animationFlag = false;
+    public RelativeLayout rlo_deleteDialog;
+    private TranslateAnimation animateSlideDownToUp;
+    private TranslateAnimation animateSlideUpToDown;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actList.add(this);
         setContentView(R.layout.activity_book_mark);
-
-
+        editMode = false;
+        mIbtn_deleteBookMark = findViewById(R.id.ibtn_deleteBookMark);
+        animationFlag = false;
+        mEditBookMark = findViewById(R.id.ibtn_editBookMark);
+        mAlBookMarkDataList = getBookMarkList();
         rvBookMark = findViewById(R.id.rv_bookMarkList);
-        mRecyclerBookMarkAdapter = new RecyclerBookMarkAdapter(mAlBookMarkList);
+        mTv_howManySelected = findViewById(R.id.tv_howManySelected);
+
+        mRecyclerBookMarkAdapter = new RecyclerBookMarkAdapter(mAlBookMarkDataList, this);
         rvBookMark.setAdapter(mRecyclerBookMarkAdapter);
         rvBookMark.setLayoutManager(new LinearLayoutManager(this));
-        for (int i = 0; i < 3; i++) {
-            mRecyclerBookMarkAdapter.addItem(new BookMarkItem("지역", "상태"));
-        }
 
+        animateSlideDownToUp = new TranslateAnimation(0, 0, 0, -200);
+        animateSlideDownToUp.setDuration(500);
+        animateSlideDownToUp.setFillAfter(true);
+
+        animateSlideUpToDown = new TranslateAnimation(0, 0, 0, 200);
+        animateSlideUpToDown.setDuration(500);
+        animateSlideUpToDown.setFillAfter(true);
+
+         rlo_deleteDialog = findViewById(R.id.rlo_deleteDialog);
+
+        mAlBookMarkDataList = getBookMarkList();
         mRecyclerBookMarkAdapter.notifyDataSetChanged();
         mbtnAddBookMark = findViewById(R.id.btn_add_book_mark);
         mbtnAddBookMark.setOnClickListener(new View.OnClickListener() {
@@ -53,5 +78,57 @@ public class BookMarkActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        mIbtn_deleteBookMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRecyclerBookMarkAdapter.deleteChecked();
+                mRecyclerBookMarkAdapter.notifyDataSetChanged();
+                Log.e("deleteChecked", "실행은함");
+            }
+        });
+
+        mEditBookMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                rlo_deleteDialog.startAnimation(animateSlideDownToUp);
+                mRecyclerBookMarkAdapter.initFlag();
+                if (animationFlag) {
+                    animationFlag = false;
+                    rlo_deleteDialog.startAnimation(animateSlideUpToDown);
+                }
+                if (editMode) {
+                    editMode = false;
+                    mEditBookMark.setText("편집");
+                    mRecyclerBookMarkAdapter.controlEditMode(false);
+                } else {
+                    editMode = true;
+                    mEditBookMark.setText("완료");
+                    mRecyclerBookMarkAdapter.controlEditMode(true);
+                }
+                Log.e("mEditBookMark",Boolean.toString(editMode));
+                mRecyclerBookMarkAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public  void showHowManySelected(int cnt){
+        if(cnt == 0){
+            rlo_deleteDialog.startAnimation(animateSlideUpToDown);
+            animationFlag = false;
+        }else{
+            if(!animationFlag){
+                rlo_deleteDialog.startAnimation(animateSlideDownToUp);
+                animationFlag = true;
+            }
+        }
+        mTv_howManySelected.setText(Integer.toString(cnt));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mRecyclerBookMarkAdapter.notifyDataSetChanged();
     }
 }
