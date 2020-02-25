@@ -37,6 +37,7 @@ import com.softsquared.template.src.main.fragments.MapFragment;
 import com.softsquared.template.src.main.interfaces.MainActivityView;
 import com.softsquared.template.src.main.items.PreDayItem;
 import com.softsquared.template.src.main.items.PreTimeItem;
+import com.softsquared.template.src.main.models.EtcResponse;
 import com.softsquared.template.src.main.models.RegionResponse;
 
 import java.io.ByteArrayOutputStream;
@@ -45,7 +46,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -74,7 +80,6 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
 
 //        adapter
-
         final InPageViewPagerAdapter mInPagePagerAdapter;
         final RecyclerPreDayAdapter mRecyclerPreDayAdapter;
         final RecyclerPreTimeAdapter mRecyclerPreTimeAdapter;
@@ -127,6 +132,14 @@ public class MainViewPagerAdapter extends PagerAdapter {
             }
 
             BookMarkData bookMarkData = mAlBookMarkData.get(position);
+            bookMarkData.tv_update_time = view.findViewById(R.id.tv_details_update_time);
+            bookMarkData.tv_pm10_mang_name = view.findViewById(R.id.tv_details_pm10_div);
+            bookMarkData.tv_pm25_mang_name = view.findViewById(R.id.tv_details_pm25_div);
+            bookMarkData.tv_pm10_station = view.findViewById(R.id.tv_details_pm10_name);
+
+
+
+
 
 
             mInPageViewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -201,12 +214,12 @@ public class MainViewPagerAdapter extends PagerAdapter {
             });
 
             //여기부터 데이터 세팅 해주기
-            BookMarkData curData = mAlBookMarkData.get(position);
-            TextView tv_myLoc = view.findViewById(R.id.tv_myLocation);
-            TextView tv_o3 = view.findViewById(R.id.tv_details_o3);
-            tv_myLoc.setText(curData.getLocation_name());
-            tv_o3.setText(curData.getO3_status());
-            String curName = curData.getLocation_name();
+//            BookMarkData curData = mAlBookMarkData.get(position);
+//            TextView tv_myLoc = view.findViewById(R.id.tv_myLocation);
+//            TextView tv_o3 = view.findViewById(R.id.tv_details_o3);
+//            tv_myLoc.setText(curData.getLocation_name());
+//            tv_o3.setText(curData.getO3_status());
+//            String curName = curData.getLocation_name();
 //            getRegion(curName);
         }
 
@@ -319,6 +332,23 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
     public BookMarkData getItem(int pos){
         return mAlBookMarkData.get(pos);
+    }
+
+    public void setEtcStatus(int pos, EtcResponse.etcResult etcResult){
+        String s = null;
+        if(etcResult.getUpdate_time() == null){
+            Date now  =  new Date(System.currentTimeMillis());
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.KOREA);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+            s = inputFormat.format(now);
+        }else{
+            s = etcResult.getUpdate_time().toString();
+        }
+        mAlBookMarkData.get(pos).tv_update_time.setText(s);
+        mAlBookMarkData.get(pos).tv_pm10_mang_name.setText(etcResult.getPm10_mang_name());
+        mAlBookMarkData.get(pos).tv_pm25_mang_name.setText(etcResult.getPm25_mang_name());
+        mAlBookMarkData.get(pos).tv_pm10_station.setText(etcResult.getPm10_station());
+
     }
 
 

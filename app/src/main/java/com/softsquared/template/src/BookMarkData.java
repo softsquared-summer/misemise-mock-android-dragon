@@ -1,5 +1,7 @@
 package com.softsquared.template.src;
 
+import android.widget.TextView;
+
 import com.softsquared.template.src.main.adapter.InPageViewPagerAdapter;
 import com.softsquared.template.src.main.models.RegionResponse;
 
@@ -34,6 +36,9 @@ public class BookMarkData {
     String day_status1_morning, day_status1_lunch, day_status1_dinner;
     String day_status2_morning, day_status2_lunch, day_status2_dinner;
     String day_status3_morning;
+
+    public TextView tv_pm10_mang_name, tv_pm25_mang_name, tv_pm10_station, tv_pm25_station, tv_no2_station,
+            tv_o3_station, tv_co_station, tv_so2_station, tv_update_time;
 
     public boolean isDeleteFlag() {
         return deleteFlag;

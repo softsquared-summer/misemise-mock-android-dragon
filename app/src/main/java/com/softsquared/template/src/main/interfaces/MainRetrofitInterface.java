@@ -1,5 +1,6 @@
 package com.softsquared.template.src.main.interfaces;
 
+import com.softsquared.template.src.main.models.EtcResponse;
 import com.softsquared.template.src.main.models.RegionResponse;
 
 import retrofit2.Call;
@@ -11,5 +12,5 @@ public interface MainRetrofitInterface {
     Call<RegionResponse> getRegion(@Query("region") String region);
 
     @GET("/dust/etc")
-    Call<RegionResponse> getEtc(@Query("region") String region);
+    Call<EtcResponse> getEtc(@Query("region") String region);
 }

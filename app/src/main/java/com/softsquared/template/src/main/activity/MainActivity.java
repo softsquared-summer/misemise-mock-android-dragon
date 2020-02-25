@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
             Log.e("curName : ", curName);
             int pos = mPagerAdapter.addItem(new BookMarkData(curName));
             getRegion(curName, pos);
+            getEtc(curName, pos);
         }
         mPagerAdapter.notifyDataSetChanged();
 
@@ -175,17 +176,27 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
     @Override
     public void getEtcCode(int code) {
+        if(code == 100){
+            Log.e("EtcResponse : ", code + "");
 
+        }else{
+            Log.e("EtcResponse : ", code + "");
+        }
     }
 
     @Override
-    public void getEtcResult(EtcResponse.etcResult etcResult, String name, int idx) {
-
+    public void getEtcResult(EtcResponse.etcResult etcResult, String name, int pos) {
+        BookMarkData bookMarkData = mPagerAdapter.getItem(pos);
+        mPagerAdapter.setEtcStatus(pos,etcResult);
     }
 
     public void getRegion(String name, int pos) {
         final MainService mainService = new MainService(this);
         mainService.getRegion(name, pos);
+    }
+    public void getEtc(String name, int pos) {
+        final MainService mainService = new MainService(this);
+        mainService.getEtc(name, pos);
     }
 
 
