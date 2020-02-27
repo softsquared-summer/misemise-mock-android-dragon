@@ -31,6 +31,7 @@ public class AddBookMarkActivityService {
                     mAddBookMarkActivityView.validateFailure(null);
                     return;
                 }
+
                 mAddBookMarkActivityView.getResult(bookMarkResponse.getResult());
                 mAddBookMarkActivityView.validateSuccess(bookMarkResponse.getMessage());
                 mAddBookMarkActivityView.getCode(bookMarkResponse.getCode());

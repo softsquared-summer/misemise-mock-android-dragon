@@ -6,6 +6,7 @@
 
     <!-- network -->
     <string name="loading">로딩중입니다.</string>
+    <string name="unloaded">로딩중...</string>
     <string name="network_error">네트워크 연결이 원활하지 않습니다.</string>
     <string name="baseUrl">http://misemise.ybean.xyz/</string>
 

@@ -10,11 +10,10 @@ import android.widget.EditText;
 import com.softsquared.template.R;
 import com.softsquared.template.src.BaseActivity;
 import com.softsquared.template.src.BookMarkData;
-import com.softsquared.template.src.bookMark.adapter.RecyclerBookMarkAdapter;
 import com.softsquared.template.src.bookMark.interfaces.AddBookMarkActivityView;
 import com.softsquared.template.src.bookMark.models.BookMarkResponse;
 import com.softsquared.template.src.bookMark.service.AddBookMarkActivityService;
-import com.softsquared.template.src.main.activity.MainActivity;
+import com.softsquared.template.src.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -67,7 +66,8 @@ public class AddBookMarkActivity extends BaseActivity implements AddBookMarkActi
         Log.e("getRegionCode" , "message : " + code);
         if(mResponseCode != 100){
             showCustomToast("주소를 잘못 입력했어요.");
-        }else{
+        }
+        else{
             String locStr = mResultList.get(0).getRegion_2depth_name() + " "  + mResultList.get(0).getRegion_3depth_name();
             BookMarkData newData = new BookMarkData(locStr);
             list = getBookMarkList();

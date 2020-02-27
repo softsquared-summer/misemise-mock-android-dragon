@@ -66,7 +66,7 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
 
 
         final TranslateAnimation animateSlideLeftToRight = new TranslateAnimation(0, 80, 0, 0);
-        final TranslateAnimation animateSlideRightToLeft = new TranslateAnimation(0, -100, 0, 0);
+        final TranslateAnimation animateSlideRightToLeft = new TranslateAnimation(0, -120, 0, 0);
         animateSlideLeftToRight.setDuration(500);
         animateSlideLeftToRight.setFillAfter(true);
         animateSlideRightToLeft.setDuration(500);

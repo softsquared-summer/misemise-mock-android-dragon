@@ -1,7 +1,11 @@
 package com.softsquared.template.src.main.interfaces;
 
+import com.softsquared.template.src.main.models.DayForecastResponse;
 import com.softsquared.template.src.main.models.EtcResponse;
+import com.softsquared.template.src.main.models.HourForecastResponse;
+import com.softsquared.template.src.main.models.NoticeResponse;
 import com.softsquared.template.src.main.models.RegionResponse;
+import com.softsquared.template.src.main.models.GradeResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,4 +17,16 @@ public interface MainRetrofitInterface {
 
     @GET("/dust/etc")
     Call<EtcResponse> getEtc(@Query("region") String region);
+
+    @GET("/dust/grade")
+    Call<GradeResponse> getGrade(@Query("region") String region);
+
+    @GET("/notice")
+    Call<NoticeResponse> getNotice();
+
+    @GET("/hourForecast")
+    Call<HourForecastResponse> getHourForecast();
+
+    @GET("/dayForecast")
+    Call<DayForecastResponse> getDayForecast();
 }

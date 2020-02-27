@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,18 @@ public class RecyclerPreTimeAdapter extends RecyclerView.Adapter<RecyclerPreTime
 
         holder.tv_time.setText(item.getTime());
         holder.tv_state.setText(item.getState());
+        
+        if(item.getState().equals("좋음")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_1);
+        }else if(item.getState().equals("양호")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_2);
+        }else if(item.getState().equals("보통")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_3);
+        }else if(item.getState().equals("나쁨")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_4);
+        }else{
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_0);
+        }
     }
 
     @Override
@@ -47,11 +60,13 @@ public class RecyclerPreTimeAdapter extends RecyclerView.Adapter<RecyclerPreTime
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_time, tv_state;
+        ImageView iv_statusImage;
 
         ViewHolder(View itemView) {
             super(itemView);
             tv_time = itemView.findViewById(R.id.tv_timePreTime);
             tv_state = itemView.findViewById(R.id.tv_TimePreState);
+            iv_statusImage = itemView.findViewById(R.id.iv_TimePreState);
         }
     }
 

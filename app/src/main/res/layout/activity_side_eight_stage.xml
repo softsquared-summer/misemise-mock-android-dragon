@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00acc2"
-    tools:context=".src.main.sideBar.SideEightStage">
+    tools:context=".src.sidebar.activity.SideEightStage">
     <LinearLayout
 
         android:layout_marginTop="10dp"

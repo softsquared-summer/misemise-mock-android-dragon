@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -44,6 +45,10 @@ public class BookMarkActivity extends BaseActivity {
         animationFlag = false;
         mEditBookMark = findViewById(R.id.ibtn_editBookMark);
         mAlBookMarkDataList = getBookMarkList();
+
+
+
+
         rvBookMark = findViewById(R.id.rv_bookMarkList);
         mTv_howManySelected = findViewById(R.id.tv_howManySelected);
 
@@ -52,10 +57,12 @@ public class BookMarkActivity extends BaseActivity {
         rvBookMark.setLayoutManager(new LinearLayoutManager(this));
 
         animateSlideDownToUp = new TranslateAnimation(0, 0, 0, -200);
+
         animateSlideDownToUp.setDuration(500);
         animateSlideDownToUp.setFillAfter(true);
 
         animateSlideUpToDown = new TranslateAnimation(0, 0, 0, 200);
+
         animateSlideUpToDown.setDuration(500);
         animateSlideUpToDown.setFillAfter(true);
 
@@ -83,6 +90,9 @@ public class BookMarkActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mRecyclerBookMarkAdapter.deleteChecked();
+                editMode = false;
+                mEditBookMark.setText("편집");
+                mRecyclerBookMarkAdapter.controlEditMode(false);
                 mRecyclerBookMarkAdapter.notifyDataSetChanged();
                 Log.e("deleteChecked", "실행은함");
             }
@@ -91,11 +101,11 @@ public class BookMarkActivity extends BaseActivity {
         mEditBookMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                rlo_deleteDialog.startAnimation(animateSlideDownToUp);
                 mRecyclerBookMarkAdapter.initFlag();
                 if (animationFlag) {
                     animationFlag = false;
-                    rlo_deleteDialog.startAnimation(animateSlideUpToDown);
+//                    rlo_deleteDialog.startAnimation(animateSlideUpToDown);
+//                    finishAnimation(rlo_deleteDialog);
                 }
                 if (editMode) {
                     editMode = false;
@@ -114,15 +124,17 @@ public class BookMarkActivity extends BaseActivity {
 
     public  void showHowManySelected(int cnt){
         if(cnt == 0){
-            rlo_deleteDialog.startAnimation(animateSlideUpToDown);
+//            rlo_deleteDialog.startAnimation(animateSlideUpToDown);
+            finishAnimation(rlo_deleteDialog);
             animationFlag = false;
         }else{
             if(!animationFlag){
-                rlo_deleteDialog.startAnimation(animateSlideDownToUp);
+                delAnimation(rlo_deleteDialog);
+
                 animationFlag = true;
             }
         }
-        mTv_howManySelected.setText(Integer.toString(cnt));
+        mTv_howManySelected.setText(Integer.toString(cnt)+"개 선택됨");
 
     }
 
@@ -130,5 +142,68 @@ public class BookMarkActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         mRecyclerBookMarkAdapter.notifyDataSetChanged();
+    }
+
+    public void delAnimation(final RelativeLayout rlo){
+        rlo.clearAnimation();
+        TranslateAnimation translateAnimationDtoU= new TranslateAnimation(0, 0, 0, -200);
+        translateAnimationDtoU.setDuration(400);
+        translateAnimationDtoU.setFillAfter(true);
+
+        translateAnimationDtoU.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                final int left = rlo.getLeft();
+                final int top = rlo.getTop();
+                final int right = rlo.getRight();
+                final int bottom = rlo.getBottom();
+                rlo.layout(left, top - 200, right, bottom - 200);
+                rlo.clearAnimation();
+                Log.e("레이아웃", "left " + left + " top " + top + " right " + right + " bottom " + bottom);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        rlo.startAnimation(translateAnimationDtoU);
+    }
+    public void finishAnimation(final RelativeLayout rlo){
+        rlo.clearAnimation();
+        TranslateAnimation translateAnimationUtoD= new TranslateAnimation(0, 0, 0, +200);
+        translateAnimationUtoD.setDuration(400);
+        translateAnimationUtoD.setFillAfter(true);
+
+        translateAnimationUtoD.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                final int left = rlo.getLeft();
+                final int top = rlo.getTop();
+                final int right = rlo.getRight();
+                final int bottom = rlo.getBottom();
+                rlo.layout(left, top + 200, right, bottom + 200);
+                rlo.clearAnimation();
+                Log.e("레이아웃", "left " + left + " top " + top + " right " + right + " bottom " + bottom);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        rlo.startAnimation(translateAnimationUtoD);
     }
 }

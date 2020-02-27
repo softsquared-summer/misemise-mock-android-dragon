@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class InPageViewPagerAdapter extends PagerAdapter {
     ArrayList<Float> infos = new ArrayList<>();
     ArrayList<TextView> tvs = new ArrayList<>();
+    ArrayList<TextView> tv_infoTitles = new ArrayList<>();
     private Context mContext;
 
     public InPageViewPagerAdapter(Context context) {
@@ -32,11 +33,17 @@ public class InPageViewPagerAdapter extends PagerAdapter {
         int backColor = R.color.colorSoso;
         int cardColor = R.color.colorCardSoso;
 
-
         if (mContext != null) {
-            // LayoutInflater를 통해 "/res/layout/layout_page.xml"을 뷰로 생성.
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.layout_page_in_page, container, false);
+            if(position == 1){
+                TextView tv_item1 = view.findViewById(R.id.tv_item1);
+                TextView tv_item2 = view.findViewById(R.id.tv_item2);
+                TextView tv_item3 = view.findViewById(R.id.tv_item3);
+                tv_item1.setText("오존");
+                tv_item2.setText("일산화탄소");
+                tv_item3.setText("아황산가스");
+            }
         }
         // 뷰페이저에 추가.
         tvs.add((TextView) view.findViewById(R.id.tv_item1_value));

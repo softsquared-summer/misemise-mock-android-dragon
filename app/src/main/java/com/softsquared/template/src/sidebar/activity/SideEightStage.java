@@ -1,4 +1,4 @@
-package com.softsquared.template.src.main.sideBar;
+package com.softsquared.template.src.sidebar.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,14 +9,13 @@ import android.widget.ImageButton;
 
 import com.softsquared.template.R;
 
-public class SideSetting extends AppCompatActivity {
-
+public class SideEightStage extends AppCompatActivity {
+    ImageButton mIbtnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ImageButton mIbtnBack;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_side_setting);
-        mIbtnBack = findViewById(R.id.btn_backSettingToMain);
+        setContentView(R.layout.activity_side_eight_stage);
+        mIbtnBack = findViewById(R.id.btn_backEightToMain);
         mIbtnBack.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {

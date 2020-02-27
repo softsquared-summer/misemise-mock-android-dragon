@@ -7,6 +7,13 @@ import java.sql.Time;
 public class EtcResponse {
     @SerializedName("isSuccess")
     public boolean isSuccess;
+    @SerializedName("code")
+    public int code;
+    @SerializedName("message")
+    public String message;
+    @SerializedName("result")
+    public etcResult etcResult;
+
 
     public boolean isSuccess() {
         return isSuccess;
@@ -40,13 +47,7 @@ public class EtcResponse {
         this.etcResult = etcResult;
     }
 
-    @SerializedName("code")
-    public int code;
-    @SerializedName("message")
-    public String message;
 
-    @SerializedName("etcResult")
-    public etcResult etcResult = new etcResult();
 
     public class etcResult{
         public String getRegion_2depth_name() {
@@ -65,19 +66,19 @@ public class EtcResponse {
             this.retgion_3depth_name = retgion_3depth_name;
         }
 
-        public Time getCurrent_time() {
+        public String getCurrent_time() {
             return current_time;
         }
 
-        public void setCurrent_time(Time current_time) {
+        public void setCurrent_time(String current_time) {
             this.current_time = current_time;
         }
 
-        public Time getUpdate_time() {
+        public String getUpdate_time() {
             return update_time;
         }
 
-        public void setUpdate_time(Time update_time) {
+        public void setUpdate_time(String update_time) {
             this.update_time = update_time;
         }
 
@@ -150,9 +151,9 @@ public class EtcResponse {
         @SerializedName("retgion_3depth_name")
         String retgion_3depth_name;
         @SerializedName("current_time")
-        Time current_time;
+        String current_time;
         @SerializedName("update_time")
-        Time update_time;
+        String update_time;
         @SerializedName("pm10_mang_name")
         String pm10_mang_name;
         @SerializedName("pm25_mang_name")

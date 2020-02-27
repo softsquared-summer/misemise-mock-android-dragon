@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    >
+
+
+
+    <ImageView
+        android:id="@+id/iv_notice_image"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/notice_top"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_notice_image"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/btn_see_again"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="#eeeeee"
+            android:text="다음에 다시 보기"
+            />
+        <Button
+            android:id="@+id/btn_see_never"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="더이상 보지 않기"
+            android:textColor="#ffffff"
+            android:background="#01bfa5"
+            />
+    </LinearLayout>
+</RelativeLayout>

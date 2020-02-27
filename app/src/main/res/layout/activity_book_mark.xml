@@ -61,12 +61,12 @@
     </Button>
     <RelativeLayout
         android:id="@+id/rlo_deleteDialog"
-        android:layout_marginBottom="70dp"
         android:background="#ffffff"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-70dp"
         >
 
         <ImageView

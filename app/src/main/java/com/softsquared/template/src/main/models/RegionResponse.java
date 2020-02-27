@@ -1,7 +1,6 @@
 package com.softsquared.template.src.main.models;
 
 import com.google.gson.annotations.SerializedName;
-import com.softsquared.template.src.bookMark.models.BookMarkResponse;
 
 public class RegionResponse {
     @SerializedName("isSuccess")
@@ -43,28 +42,28 @@ public class RegionResponse {
 
     @SerializedName("message")
     String message = "";
-//    @SerializedName("result")
+    @SerializedName("result")
     result result = new result();
 
     public static class result {
-//        @SerializedName("total_value")
+        @SerializedName("total_value")
         int total_value;
-//        @SerializedName("pm10_value")
+        @SerializedName("pm10_value")
         int pm10_value;
-//        @SerializedName("pm25_value")
+        @SerializedName("pm25_value")
         int pm25_value;
-//        @SerializedName("no2_value")
+        @SerializedName("no2_value")
         Float no2_value;
-//        @SerializedName("o3_value")
+        @SerializedName("o3_value")
         Float o3_value;
-//        @SerializedName("co_value")
+        @SerializedName("co_value")
         Float co_value;
-//        @SerializedName("so2_value")
+        @SerializedName("so2_value")
         Float so2_value;
 
         public result() {
             total_value = pm10_value = pm25_value = -1;
-            no2_value = o3_value = co_value = so2_value =(float)-1;
+            no2_value = o3_value = co_value = so2_value = (float) -1;
         }
 
         public int getTotal_value() {
@@ -122,7 +121,5 @@ public class RegionResponse {
         public void setSo2_value(Float so2_value) {
             this.so2_value = so2_value;
         }
-
-
     }
 }

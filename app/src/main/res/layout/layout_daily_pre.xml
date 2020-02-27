@@ -8,13 +8,14 @@
 
     <TextView
         android:id="@+id/tv_day"
-        android:layout_width="55dp"
+        android:layout_width="wrap_content"
         android:layout_height="21dp"
         android:textColor="#ffffff"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/iv_state"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_state"
+        android:textAlignment="textEnd"
         android:layout_marginLeft="15dp"
         />
 
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
         android:text="TextView"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="@+id/iv_state"
         app:layout_constraintEnd_toStartOf="@+id/iv_state"
         app:layout_constraintHorizontal_bias="0.19"
@@ -39,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_day"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_wink"
+        android:src="@drawable/ic_smile_2"
         android:paddingHorizontal="3dp"
         android:paddingVertical="3dp"
         />

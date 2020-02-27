@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,17 @@ public class RecyclerPreDayAdapter extends RecyclerView.Adapter<RecyclerPreDayAd
         holder.tv_day.setText(item.getDay());
         holder.tv_when.setText(item.getWhen());
         holder.tv_state.setText(item.getState());
+        if(item.getState().equals("좋음")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_1);
+        }else if(item.getState().equals("양호")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_2);
+        }else if(item.getState().equals("보통")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_3);
+        }else if(item.getState().equals("나쁨")){
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_4);
+        }else{
+            holder.iv_statusImage.setImageResource(R.drawable.ic_smile_0);
+        }
     }
 
     @Override
@@ -49,12 +61,13 @@ public class RecyclerPreDayAdapter extends RecyclerView.Adapter<RecyclerPreDayAd
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_day, tv_when, tv_state;
-
+        ImageView iv_statusImage;
         ViewHolder(View itemView) {
             super(itemView);
             tv_day = itemView.findViewById(R.id.tv_day);
             tv_when = itemView.findViewById(R.id.tv_when);
             tv_state = itemView.findViewById(R.id.tv_state);
+            iv_statusImage = itemView.findViewById(R.id.iv_state);
         }
     }
 
