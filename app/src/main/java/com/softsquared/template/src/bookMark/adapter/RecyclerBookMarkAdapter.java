@@ -2,6 +2,7 @@ package com.softsquared.template.src.bookMark.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +52,7 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.layout_book_mark_item, parent, false);
         RecyclerBookMarkAdapter.ViewHolder vh = new RecyclerBookMarkAdapter.ViewHolder(view);
+
         return vh;
     }
 
@@ -61,8 +64,25 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
             saveBookMarkList(mData);
             return;
         }
+        String curStatus = item.getMise_status();
         holder.tvLocation.setText(item.getLocation_name());
-        holder.tvStatus.setText(item.getMise_status());
+        holder.tvStatus.setText(curStatus);
+        if(curStatus.equals("좋음")){
+            holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#0277bd"));
+            holder.iv_status.setImageResource(R.drawable.ic_smile_1);
+        }else if(curStatus.equals("양호")){
+            holder.iv_status.setImageResource(R.drawable.ic_smile_2);
+            holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#0098a6"));
+        }else if(curStatus.equals("보통")){
+            holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#398e3d"));
+            holder.iv_status.setImageResource(R.drawable.ic_smile_3);
+        }else if(curStatus.equals("나쁨")){
+            holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#d74315"));
+            holder.iv_status.setImageResource(R.drawable.ic_smile_4);
+        }else{
+            holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#000000"));
+            holder.iv_status.setImageResource(R.drawable.ic_smile_0);
+        }
 
 
         final TranslateAnimation animateSlideLeftToRight = new TranslateAnimation(0, 80, 0, 0);
@@ -71,7 +91,7 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         animateSlideLeftToRight.setFillAfter(true);
         animateSlideRightToLeft.setDuration(500);
         animateSlideRightToLeft.setFillAfter(true);
-        if (item.isEditFlag()) {
+        if (item.isEditFlag() && position != 0) {
             holder.tvLocation.startAnimation(animateSlideLeftToRight);
             holder.cb_book_mark_list_checker.startAnimation(animateSlideLeftToRight);
             holder.iv_upDownChange.startAnimation(animateSlideRightToLeft);
@@ -94,10 +114,11 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         RelativeLayout rlo_container, rlo_book_mark_image;
         CheckBox cb_book_mark_list_checker;
         ImageButton iv_upDownChange;
+        ImageView iv_status;
 
-        ViewHolder(View itemView) {
+        ViewHolder(final View itemView) {
             super(itemView);
-
+            iv_status = itemView.findViewById(R.id.iv_status_in_book_mark);
             rlo_book_mark_image = itemView.findViewById(R.id.rlo_book_mark_image);
             tvLocation = itemView.findViewById(R.id.tv_book_mark_location);
             tvStatus = itemView.findViewById(R.id.tv_book_mark_status);

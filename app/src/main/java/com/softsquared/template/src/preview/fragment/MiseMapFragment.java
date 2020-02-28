@@ -2,11 +2,13 @@ package com.softsquared.template.src.preview.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 public class MiseMapFragment extends Fragment implements OnMapReadyCallback, PreviewActivityView {
 
     private MapView mapView = null;
+    ImageButton mIbtnMiseCancel;
     ArrayList<MapResponse.MapResult> mAlMapList;
     FusedLocationProviderClient mFusedLocationClient;
     @Override
@@ -41,8 +44,14 @@ public class MiseMapFragment extends Fragment implements OnMapReadyCallback, Pre
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.layout_mise_map_fragment, container, false);
         mapView = (MapView)layout.findViewById(R.id.mise_map);
+        mIbtnMiseCancel = layout.findViewById(R.id.ibtn_mise_back);
         mapView.getMapAsync((OnMapReadyCallback) this);
-
+        mIbtnMiseCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
         return layout;
     }
 

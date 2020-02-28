@@ -55,8 +55,8 @@ public class GradeResponse {
         Float no2_grade;
         @SerializedName("o3_grade")
         Float o3_grade;
-        @SerializedName("co2_grade")
-        Float co2_grade;
+        @SerializedName("co_grade")
+        Float co_grade;
         @SerializedName("so2_grade")
         Float so2_grade;
         @SerializedName("current_status_grade")
@@ -102,12 +102,12 @@ public class GradeResponse {
             this.o3_grade = o3_grade;
         }
 
-        public Float getCo2_grade() {
-            return co2_grade;
+        public Float getCo_grade() {
+            return co_grade;
         }
 
-        public void setCo2_grade(Float co2_grade) {
-            this.co2_grade = co2_grade;
+        public void setCo_grade(Float co2_grade) {
+            this.co_grade = co2_grade;
         }
 
         public Float getSo2_grade() {

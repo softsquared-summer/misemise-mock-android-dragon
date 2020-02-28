@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.softsquared.template.R;
 import com.softsquared.template.src.BaseActivity;
 import com.softsquared.template.src.BookMarkData;
@@ -33,6 +34,7 @@ import com.softsquared.template.src.sidebar.activity.SideSetting;
 import com.softsquared.template.src.sidebar.activity.SideWho;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Retrofit;
 
@@ -53,10 +55,9 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         actList.add(this);
 
         mAlBookMarkData = getBookMarkList();
-//        //should delete
-        if(mAlBookMarkData.size()<1){
-            mAlBookMarkData.add(new BookMarkData("더미"));
-            saveBookMarkList(mAlBookMarkData);
+        Log.e("shared size", mAlBookMarkData.size() + "");
+        if(mAlBookMarkData.size() < 1){
+            mAlBookMarkData.add(new BookMarkData("단원구 선부동"));
         }
         if(mAlBookMarkData.get(0).noticeDialogFlag){
             showNotice();
@@ -64,6 +65,17 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 //        // make splash - 조건에 맞게 스플래쉬 해주는거 추가해야함
 //        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
 //        startActivity(intent);
+
+        GpsInfo gps = new GpsInfo(MainActivity.this);
+        if(gps.isGetLocation()){
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            // Creating a LatLng object for the current location
+             LatLng latLng = new LatLng(latitude, longitude);
+            Log.e("gps", latitude + " " + longitude);
+        }
+
+
         if (mAlBookMarkData.size() < 1) {
             BookMarkData cur_my_loc = new BookMarkData("현재 위치");
             mAlBookMarkData.add(cur_my_loc);
@@ -110,7 +122,15 @@ public class MainActivity extends BaseActivity implements MainActivityView {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), BookMarkActivity.class);
+                HashMap<String, String> hashMap = new HashMap<String, String>();
+                for(int i=0;i<mPagerAdapter.getCount();i++){
+                    String name = mPagerAdapter.getItem(i).getLocation_name();
+                    String state = mPagerAdapter.getItem(i).tv_mise_status.getText().toString();
+                    hashMap.put(name, state);
+                }
+                intent.putExtra("hashMap", hashMap);
                 startActivity(intent);
+
             }
         });
         mIbtnOpenDrawer.setOnClickListener(new Button.OnClickListener() {

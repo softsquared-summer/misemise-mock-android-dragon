@@ -19,9 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.softsquared.template.R;
 import com.softsquared.template.src.BaseActivity;
 import com.softsquared.template.src.BookMarkData;
+import com.softsquared.template.src.bookMark.BookMarkDialog;
 import com.softsquared.template.src.bookMark.adapter.RecyclerBookMarkAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BookMarkActivity extends BaseActivity {
     private ImageButton mBtnBack, mIbtn_deleteBookMark;
@@ -33,11 +35,11 @@ public class BookMarkActivity extends BaseActivity {
     public Boolean editMode;
     boolean animationFlag = false;
     public RelativeLayout rlo_deleteDialog;
-    private TranslateAnimation animateSlideDownToUp;
-    private TranslateAnimation animateSlideUpToDown;
+    int mAnimationMargin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAnimationMargin = 250;
         actList.add(this);
         setContentView(R.layout.activity_book_mark);
         editMode = false;
@@ -45,7 +47,12 @@ public class BookMarkActivity extends BaseActivity {
         animationFlag = false;
         mEditBookMark = findViewById(R.id.ibtn_editBookMark);
         mAlBookMarkDataList = getBookMarkList();
-
+        Intent intent = getIntent();
+        HashMap<String, String> hashMap = (HashMap<String, String>)intent.getSerializableExtra("hashMap");
+        for(int i=0;i<mAlBookMarkDataList.size();i++){
+            mAlBookMarkDataList.get(i).setMise_status(hashMap.get(mAlBookMarkDataList.get(i).getLocation_name()));
+        }
+        saveBookMarkList(mAlBookMarkDataList);
 
 
 
@@ -56,15 +63,6 @@ public class BookMarkActivity extends BaseActivity {
         rvBookMark.setAdapter(mRecyclerBookMarkAdapter);
         rvBookMark.setLayoutManager(new LinearLayoutManager(this));
 
-        animateSlideDownToUp = new TranslateAnimation(0, 0, 0, -200);
-
-        animateSlideDownToUp.setDuration(500);
-        animateSlideDownToUp.setFillAfter(true);
-
-        animateSlideUpToDown = new TranslateAnimation(0, 0, 0, 200);
-
-        animateSlideUpToDown.setDuration(500);
-        animateSlideUpToDown.setFillAfter(true);
 
          rlo_deleteDialog = findViewById(R.id.rlo_deleteDialog);
 
@@ -74,6 +72,11 @@ public class BookMarkActivity extends BaseActivity {
         mbtnAddBookMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mAlBookMarkDataList.size() > 5){
+                    BookMarkDialog bookMarkDialog = new BookMarkDialog(BookMarkActivity.this);
+                    bookMarkDialog.callFunction();
+                    return;
+                }
                 Intent intent = new Intent(getApplicationContext(), AddBookMarkActivity.class);
                 startActivity(intent);
             }
@@ -104,8 +107,6 @@ public class BookMarkActivity extends BaseActivity {
                 mRecyclerBookMarkAdapter.initFlag();
                 if (animationFlag) {
                     animationFlag = false;
-//                    rlo_deleteDialog.startAnimation(animateSlideUpToDown);
-//                    finishAnimation(rlo_deleteDialog);
                 }
                 if (editMode) {
                     editMode = false;
@@ -124,7 +125,6 @@ public class BookMarkActivity extends BaseActivity {
 
     public  void showHowManySelected(int cnt){
         if(cnt == 0){
-//            rlo_deleteDialog.startAnimation(animateSlideUpToDown);
             finishAnimation(rlo_deleteDialog);
             animationFlag = false;
         }else{
@@ -146,7 +146,7 @@ public class BookMarkActivity extends BaseActivity {
 
     public void delAnimation(final RelativeLayout rlo){
         rlo.clearAnimation();
-        TranslateAnimation translateAnimationDtoU= new TranslateAnimation(0, 0, 0, -200);
+        TranslateAnimation translateAnimationDtoU= new TranslateAnimation(0, 0, 0, -mAnimationMargin);
         translateAnimationDtoU.setDuration(400);
         translateAnimationDtoU.setFillAfter(true);
 
@@ -163,7 +163,7 @@ public class BookMarkActivity extends BaseActivity {
                 final int top = rlo.getTop();
                 final int right = rlo.getRight();
                 final int bottom = rlo.getBottom();
-                rlo.layout(left, top - 200, right, bottom - 200);
+                rlo.layout(left, top - mAnimationMargin, right, bottom - mAnimationMargin);
                 rlo.clearAnimation();
                 Log.e("레이아웃", "left " + left + " top " + top + " right " + right + " bottom " + bottom);
             }
@@ -177,7 +177,7 @@ public class BookMarkActivity extends BaseActivity {
     }
     public void finishAnimation(final RelativeLayout rlo){
         rlo.clearAnimation();
-        TranslateAnimation translateAnimationUtoD= new TranslateAnimation(0, 0, 0, +200);
+        TranslateAnimation translateAnimationUtoD= new TranslateAnimation(0, 0, 0, +mAnimationMargin);
         translateAnimationUtoD.setDuration(400);
         translateAnimationUtoD.setFillAfter(true);
 
@@ -189,12 +189,11 @@ public class BookMarkActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
                 final int left = rlo.getLeft();
                 final int top = rlo.getTop();
                 final int right = rlo.getRight();
                 final int bottom = rlo.getBottom();
-                rlo.layout(left, top + 200, right, bottom + 200);
+                rlo.layout(left, top + mAnimationMargin, right, bottom + mAnimationMargin);
                 rlo.clearAnimation();
                 Log.e("레이아웃", "left " + left + " top " + top + " right " + right + " bottom " + bottom);
             }

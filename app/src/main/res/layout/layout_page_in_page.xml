@@ -34,10 +34,12 @@
                         android:textColor="#ffffff"
                         />
                     <ImageView
+                        android:id="@+id/iv_item1_status"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="2"/>
                     <TextView
+                        android:id="@+id/tv_item1_grade"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:textColor="#ffffff"
@@ -73,10 +75,12 @@
                         android:textColor="#ffffff"
                         />
                     <ImageView
+                        android:id="@+id/iv_item2_status"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="2"/>
                     <TextView
+                        android:id="@+id/tv_item2_grade"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:textAlignment="center"
@@ -112,10 +116,13 @@
                         android:textColor="#ffffff"
                         />
                     <ImageView
+                        android:id="@+id/iv_item3_status"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="2"/>
+                        android:layout_weight="2"
+                        />
                     <TextView
+                        android:id="@+id/tv_item3_grade"
                         android:layout_width="match_parent"
                         android:textSize="11dp"
                         android:layout_height="0dp"

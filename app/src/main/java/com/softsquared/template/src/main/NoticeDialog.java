@@ -42,7 +42,7 @@ public class NoticeDialog {
                 dig.cancel();
             }
         });
-        dig.show();
+//        dig.show();
     }
 
 

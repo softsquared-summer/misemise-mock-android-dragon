@@ -180,7 +180,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             bookMarkData.card_details = view.findViewById(R.id.card_details);
             bookMarkData.card_searcher_info = view.findViewById(R.id.card_searcher_info);
             bookMarkData.card_six_status = view.findViewById(R.id.card_six_status);
-            bookMarkData.card_time_pre= view.findViewById(R.id.card_time_pre);
+            bookMarkData.card_time_pre = view.findViewById(R.id.card_time_pre);
             bookMarkData.tv_api_update_time = view.findViewById(R.id.tv_api_update_time);
 
             if (position != 0) {
@@ -214,7 +214,6 @@ public class MainViewPagerAdapter extends PagerAdapter {
 //                        mInPageViewPager.setCurrentItem((position - 2), true);
 //                }
 //            });
-
 
 
             bookMarkData.mInPagePagerAdapter = new InPageViewPagerAdapter(mContext);
@@ -287,7 +286,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             case 4:
                 return "#d74315";
             default:
-                return "#ffffff";
+                return "#000000";
         }
     }
 
@@ -302,7 +301,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             case 4:
                 return "#e64a19";
             default:
-                return "#ffffff";
+                return "#000000";
         }
     }
 
@@ -422,6 +421,8 @@ public class MainViewPagerAdapter extends PagerAdapter {
         } else {
             s = etcResult.getUpdate_time().toString();
         }
+        Log.e("pos", pos + "");
+        Log.e("size", mAlBookMarkData.size() + "");
         mAlBookMarkData.get(pos).tv_api_update_time.setText(s);
         mAlBookMarkData.get(pos).tv_update_time.setText(" " + s);
         mAlBookMarkData.get(pos).tv_pm10_mang_name.setText(" " + etcResult.getPm10_mang_name());
@@ -442,6 +443,21 @@ public class MainViewPagerAdapter extends PagerAdapter {
         BookMarkData bookMarkData = mAlBookMarkData.get(pos);
         int cur_grade = gradeResult.getCurrent_status_grade();
         int total_grade = gradeResult.getTotal_grade();
+        float pm10_grade = (float) gradeResult.getPm10_grade();
+        float pm25_grade = (float) gradeResult.getPm25_grade();
+        float no2_grade = (float) gradeResult.getNo2_grade();
+        float o3_grade = (float) gradeResult.getO3_grade();
+        float co_grade = (float) gradeResult.getCo_grade();
+        float so2_grade = (float) gradeResult.getSo2_grade();
+
+        bookMarkData.mInPagePagerAdapter.addGradeItem(pm10_grade);
+        bookMarkData.mInPagePagerAdapter.addGradeItem(pm25_grade);
+        bookMarkData.mInPagePagerAdapter.addGradeItem(no2_grade);
+        bookMarkData.mInPagePagerAdapter.addGradeItem(o3_grade);
+        bookMarkData.mInPagePagerAdapter.addGradeItem(co_grade);
+        bookMarkData.mInPagePagerAdapter.addGradeItem(so2_grade);
+        mAlBookMarkData.get(pos).mInPagePagerAdapter.myGradeNotifyDataSetChanged();
+
         switch (cur_grade) {
             case 1:
                 bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_1);
@@ -500,10 +516,12 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
     public void setRegionStatus(int pos, RegionResponse.result result) {
         BookMarkData bookMarkData = mAlBookMarkData.get(pos);
+
+
         bookMarkData.tv_details_total_value.setText(" " + result.getTotal_value() + " unit (최근 24시간 평균)");
 
-        if (bookMarkData.mInPagePagerAdapter != null)
-            bookMarkData.mInPagePagerAdapter.infos = new ArrayList<Float>();
+
+        bookMarkData.mInPagePagerAdapter.infos = new ArrayList<Float>();
         bookMarkData.mInPagePagerAdapter.addItem((float) result.getPm10_value());
         bookMarkData.mInPagePagerAdapter.addItem((float) result.getPm25_value());
         bookMarkData.mInPagePagerAdapter.addItem((float) result.getNo2_value());
@@ -512,20 +530,22 @@ public class MainViewPagerAdapter extends PagerAdapter {
         bookMarkData.mInPagePagerAdapter.addItem((float) result.getSo2_value());
 
         mAlBookMarkData.get(pos).mInPagePagerAdapter.myNotifyDataSetChanged();
+
     }
 
-    public void setHourForecast(ArrayList<HourForecastResponse.ForecastResult> result, int pos){
+    public void setHourForecast(ArrayList<HourForecastResponse.ForecastResult> result, int pos) {
         BookMarkData bookMarkData = mAlBookMarkData.get(pos);
 
-        for(int i=0;i<result.size();i++){
+        for (int i = 0; i < result.size(); i++) {
             bookMarkData.mRecyclerPreTimeAdapter.addItem(new PreTimeItem(result.get(i).getHour(), result.get(i).getCurrent_grade()));
         }
         bookMarkData.mRecyclerPreTimeAdapter.notifyDataSetChanged();
     }
-    public void setDayForecast(ArrayList<DayForecastResponse.ForecastResult> result, int pos){
+
+    public void setDayForecast(ArrayList<DayForecastResponse.ForecastResult> result, int pos) {
         BookMarkData bookMarkData = mAlBookMarkData.get(pos);
 
-        for(int i=0;i<result.size();i++){
+        for (int i = 0; i < result.size(); i++) {
             bookMarkData.mRecyclerPreDayAdapter.addItem(new PreDayItem(result.get(i).getDay(), result.get(i).getTime(), result.get(i).getCurrent_grade()));
         }
         bookMarkData.mRecyclerPreDayAdapter.notifyDataSetChanged();

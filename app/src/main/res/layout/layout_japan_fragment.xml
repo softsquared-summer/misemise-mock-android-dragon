@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#ffffff"
     android:layout_height="match_parent">
     <RelativeLayout
+        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <TextView
@@ -16,14 +18,67 @@
             android:layout_alignParentLeft="true"
             />
         <ImageButton
+            android:id="@+id/ibtn_cancel_japan"
             android:layout_width="17dp"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
+
             android:src="@drawable/ic_cancel_black"
             android:background="#ffffff"
             />
     </RelativeLayout>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/iv_japan"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_centerVertical="true"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <ImageButton
+            android:id="@+id/ibtn_play_japan"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_right_black"
+            android:scaleType="fitCenter"
+            android:background="#00000000"
+            android:padding="14dp"
+            android:layout_weight="1"
+            />
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/sb_japan"
+            android:max="16"
+            android:progress="0"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            />
+        <ImageButton
+            android:id="@+id/ibtn_go_prev"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:src="@drawable/go_prev"
+            android:scaleType="fitCenter"
+            android:background="#00000000"
+            android:padding="3dp"
+            />
+        <ImageButton
+            android:id="@+id/ibtn_go_next"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:src="@drawable/go_next"
+            android:scaleType="fitCenter"
+            android:background="#00000000"
+            android:padding="3dp"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
