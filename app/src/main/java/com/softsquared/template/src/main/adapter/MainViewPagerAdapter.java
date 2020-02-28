@@ -182,6 +182,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
             bookMarkData.card_six_status = view.findViewById(R.id.card_six_status);
             bookMarkData.card_time_pre = view.findViewById(R.id.card_time_pre);
             bookMarkData.tv_api_update_time = view.findViewById(R.id.tv_api_update_time);
+            bookMarkData.tv_location_name = view.findViewById(R.id.tv_myLocation);
 
             if (position != 0) {
                 bookMarkData.tv_current_location_flag.setVisibility(View.INVISIBLE);
@@ -423,6 +424,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
         }
         Log.e("pos", pos + "");
         Log.e("size", mAlBookMarkData.size() + "");
+        mAlBookMarkData.get(pos).tv_location_name.setText(etcResult.getRegion_2depth_name() + " " + etcResult.getRegion_3depth_name());
         mAlBookMarkData.get(pos).tv_api_update_time.setText(s);
         mAlBookMarkData.get(pos).tv_update_time.setText(" " + s);
         mAlBookMarkData.get(pos).tv_pm10_mang_name.setText(" " + etcResult.getPm10_mang_name());

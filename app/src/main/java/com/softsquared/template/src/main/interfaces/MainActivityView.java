@@ -24,6 +24,8 @@ public interface MainActivityView {
 
     void getEtcResult(EtcResponse.etcResult etcResult, String name, int pos);
 
+    void getEtcResult2(EtcResponse.etcResult etcResult, int pos);
+
     void getGradeResult(GradeResponse.gradeResult gradeResult, String name, int pos);
 
     void getNoticeResult(NoticeResponse.noticeResult result);

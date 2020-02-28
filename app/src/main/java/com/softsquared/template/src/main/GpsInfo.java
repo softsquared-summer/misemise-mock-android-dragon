@@ -62,7 +62,7 @@ public class GpsInfo extends Service implements LocationListener {
                         }
                     }
                 }
-                if (isGPSEnabled) {
+                else if (isGPSEnabled) {
                     if (location == null) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_UPDATES, MIN_DISTANCE_UPDATES, this);
                         if (locationManager != null) {

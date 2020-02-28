@@ -38,20 +38,28 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
     //    private Button mBtnEdit;
     View view;
     Context mContext;
-//    Boolean editMode, Boolean animationFlag,
-    public RecyclerBookMarkAdapter(ArrayList<BookMarkData> list ,Context context) {
+    private TranslateAnimation animateSlideLeftToRight = new TranslateAnimation(0, 80, 0, 0);
+    private TranslateAnimation animateSlideRightToLeft = new TranslateAnimation(0, -120, 0, 0);
+
+    //    Boolean editMode, Boolean animationFlag,
+    public RecyclerBookMarkAdapter(ArrayList<BookMarkData> list, Context context) {
         mData = list;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        System.out.println("리사이클러 뷰 로드");
+        Log.e("onCreateViewHolder", "리사이클러 뷰 로드");
         Context context = parent.getContext();
-        initFlag();
+        // initFlag();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.layout_book_mark_item, parent, false);
         RecyclerBookMarkAdapter.ViewHolder vh = new RecyclerBookMarkAdapter.ViewHolder(view);
+
+        animateSlideLeftToRight.setDuration(500);
+        animateSlideLeftToRight.setFillAfter(true);
+        animateSlideRightToLeft.setDuration(500);
+        animateSlideRightToLeft.setFillAfter(true);
 
         return vh;
     }
@@ -59,39 +67,34 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         BookMarkData item = mData.get(position);
-        if (item.isDeleteFlag() == true) {
-            mData.remove(position);
-            saveBookMarkList(mData);
-            return;
-        }
+        // Log.e("bind", position + " " + holder.tvLocation.getText().toString());
+
         String curStatus = item.getMise_status();
         holder.tvLocation.setText(item.getLocation_name());
         holder.tvStatus.setText(curStatus);
-        if(curStatus.equals("좋음")){
+
+        if (curStatus.equals("좋음")) {
             holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#0277bd"));
             holder.iv_status.setImageResource(R.drawable.ic_smile_1);
-        }else if(curStatus.equals("양호")){
+        } else if (curStatus.equals("양호")) {
             holder.iv_status.setImageResource(R.drawable.ic_smile_2);
             holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#0098a6"));
-        }else if(curStatus.equals("보통")){
+        } else if (curStatus.equals("보통")) {
             holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#398e3d"));
             holder.iv_status.setImageResource(R.drawable.ic_smile_3);
-        }else if(curStatus.equals("나쁨")){
+        } else if (curStatus.equals("나쁨")) {
             holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#d74315"));
             holder.iv_status.setImageResource(R.drawable.ic_smile_4);
-        }else{
+        } else {
             holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#000000"));
             holder.iv_status.setImageResource(R.drawable.ic_smile_0);
         }
 
 
-        final TranslateAnimation animateSlideLeftToRight = new TranslateAnimation(0, 80, 0, 0);
-        final TranslateAnimation animateSlideRightToLeft = new TranslateAnimation(0, -120, 0, 0);
-        animateSlideLeftToRight.setDuration(500);
-        animateSlideLeftToRight.setFillAfter(true);
-        animateSlideRightToLeft.setDuration(500);
-        animateSlideRightToLeft.setFillAfter(true);
-        if (item.isEditFlag() && position != 0) {
+        // Log.e("onBindViewHolder", position + "");
+
+        Log.e("inAnimation", "isEditFlag[" + position + "] : " + item.isEditFlag());
+        if (mData.get(position).isEditFlag() && position != 0) {
             holder.tvLocation.startAnimation(animateSlideLeftToRight);
             holder.cb_book_mark_list_checker.startAnimation(animateSlideLeftToRight);
             holder.iv_upDownChange.startAnimation(animateSlideRightToLeft);
@@ -100,7 +103,10 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         } else {
             holder.rlo_book_mark_image.setVisibility(View.VISIBLE);
         }
-
+        if (item.isDeleteFlag() == true) {
+            mData.remove(position);
+            saveBookMarkList(mData);
+        }
     }
 
 
@@ -128,7 +134,10 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!((BookMarkActivity)mContext).editMode) return;
+                    if (!((BookMarkActivity) mContext).editMode) {
+                        Log.e("onClick", "editMode : " + ((BookMarkActivity) mContext).editMode);
+                        return;
+                    }
                     if (cb_book_mark_list_checker.isChecked()) {
                         cb_book_mark_list_checker.setChecked(false);
                         mData.get(getAdapterPosition()).setDeleteFlag(false);
@@ -158,27 +167,18 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         editor.commit();
     }
 
-    public ArrayList<BookMarkData> getBookMarkList() {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-        Gson gson = new Gson();
-        String json = sharedPrefs.getString("bookMark", "");
-        Type type = new TypeToken<ArrayList<BookMarkData>>() {
-        }.getType();
-        ArrayList<BookMarkData> arrayList = gson.fromJson(json, type);
-        if (arrayList == null) arrayList = new ArrayList<>();
-        return arrayList;
-    }
 
     public void controlEditMode(boolean mode) {
-        for (int i = 0; i < mData.size(); i++) {
+        for (int i = 0; i < getItemCount(); i++) {
             mData.get(i).setEditFlag(mode);
+            Log.e("mData_editFlag", i + "");
+            Log.e("mData_editFlag", mData.get(i).isEditFlag() + "");
         }
+        notifyDataSetChanged();
     }
 
     public int countChecked() {
         int cnt = 0;
-
-
         for (int i = 0; i < mData.size(); i++) {
             //Log.e("name:", mData.get(i).getLocation_name());
             // Log.e("dFlag:", mData.get(i).isDeleteFlag()+"");

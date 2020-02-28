@@ -72,7 +72,7 @@ public class BookMarkActivity extends BaseActivity {
         mbtnAddBookMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAlBookMarkDataList.size() > 5){
+                if(mAlBookMarkDataList.size() > 6){
                     BookMarkDialog bookMarkDialog = new BookMarkDialog(BookMarkActivity.this);
                     bookMarkDialog.callFunction();
                     return;

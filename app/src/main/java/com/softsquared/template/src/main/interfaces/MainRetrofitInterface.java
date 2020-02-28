@@ -18,6 +18,9 @@ public interface MainRetrofitInterface {
     @GET("/dust/etc")
     Call<EtcResponse> getEtc(@Query("region") String region);
 
+    @GET("/dust/etc")
+    Call<EtcResponse> getEtc2(@Query("x") Double x, @Query("y") Double y);
+
     @GET("/dust/grade")
     Call<GradeResponse> getGrade(@Query("region") String region);
 

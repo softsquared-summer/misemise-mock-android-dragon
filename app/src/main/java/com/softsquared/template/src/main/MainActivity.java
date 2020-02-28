@@ -52,39 +52,37 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         actList.add(this);
 
         mAlBookMarkData = getBookMarkList();
-        Log.e("shared size", mAlBookMarkData.size() + "");
-        if(mAlBookMarkData.size() < 1){
-            mAlBookMarkData.add(new BookMarkData("단원구 선부동"));
-        }
-        if(mAlBookMarkData.get(0).noticeDialogFlag){
-            showNotice();
-        }
+
 //        // make splash - 조건에 맞게 스플래쉬 해주는거 추가해야함
 //        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
 //        startActivity(intent);
 
         GpsInfo gps = new GpsInfo(MainActivity.this);
+        double latitude = 37.715133, longitude = 126.734086;
         if(gps.isGetLocation()){
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
             // Creating a LatLng object for the current location
              LatLng latLng = new LatLng(latitude, longitude);
-            Log.e("gps", latitude + " " + longitude);
         }
 
-
+        getEtc2(longitude, latitude, 0);
+        Log.e("gps", longitude + " " + latitude);
         if (mAlBookMarkData.size() < 1) {
             BookMarkData cur_my_loc = new BookMarkData("현재 위치");
             mAlBookMarkData.add(cur_my_loc);
             saveBookMarkList(mAlBookMarkData);
         }
+        if (mAlBookMarkData.get(0).noticeDialogFlag) {
+            showNotice();
+        }
         Log.e("sharedPreCOunt", mAlBookMarkData.size() + "");
 
-
-        setContentView(R.layout.activity_main);
 
         mViewPager = findViewById(R.id.viewPager);
         mIbtnInfo = findViewById(R.id.btn_info);
@@ -99,20 +97,19 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         mIvMainAd = findViewById(R.id.iv_main_ad);
 
 
-
-
         mPagerAdapter = new MainViewPagerAdapter(this);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(10);
+        mPagerAdapter.addItem(new BookMarkData("현재위치"));
 
-        for (int i = 0; i < mAlBookMarkData.size(); i++) {
+        for (int i = 1; i < mAlBookMarkData.size(); i++) {
             String curName = mAlBookMarkData.get(i).getLocation_name();
             Log.e("curName : ", curName);
             int pos = mPagerAdapter.addItem(new BookMarkData(curName));
             getRegion(curName, pos);
             getEtc(curName, pos);
             getGrade(curName, pos);
-            getNotice();
+//            getNotice();
             getHourForecast(pos);
             getDayForecast(pos);
         }
@@ -123,7 +120,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), BookMarkActivity.class);
                 HashMap<String, String> hashMap = new HashMap<String, String>();
-                for(int i=0;i<mPagerAdapter.getCount();i++){
+                for (int i = 0; i < mPagerAdapter.getCount(); i++) {
                     String name = mPagerAdapter.getItem(i).getLocation_name();
                     String state = mPagerAdapter.getItem(i).tv_mise_status.getText().toString();
                     hashMap.put(name, state);
@@ -189,10 +186,17 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("resume", "resume");
         if (mAlBookMarkData.size() != getBookMarkList().size()) {
-            actFinish();
+//            actFinish();
             onRestart();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Override
@@ -239,6 +243,12 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     }
 
     @Override
+    public void getEtcResult2(EtcResponse.etcResult etcResult, int pos) {
+        BookMarkData bookMarkData = mPagerAdapter.getItem(pos);
+        mPagerAdapter.setEtcStatus(pos, etcResult);
+    }
+
+    @Override
     public void getGradeResult(GradeResponse.gradeResult gradeResult, String name, int pos) {
         BookMarkData bookMarkData = mPagerAdapter.getItem(pos);
         mPagerAdapter.setGradeResult(pos, gradeResult);
@@ -251,13 +261,13 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
     @Override
     public void getHourForecastResult(ArrayList<HourForecastResponse.ForecastResult> result, int pos) {
-        Log.e("hourForecast데이터", result.get(0).getHour()+"");
+        Log.e("hourForecast데이터", result.get(0).getHour() + "");
         mPagerAdapter.setHourForecast(result, pos);
     }
 
     @Override
     public void getDayForecastResult(ArrayList<DayForecastResponse.ForecastResult> result, int pos) {
-        Log.e("dayForecast데이터", result.get(0).getDay()+"");
+        Log.e("dayForecast데이터", result.get(0).getDay() + "");
         mPagerAdapter.setDayForecast(result, pos);
     }
 
@@ -265,10 +275,12 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         final MainService mainService = new MainService(this);
         mainService.getNotice();
     }
+
     public void getGrade(String name, int pos) {
         final MainService mainService = new MainService(this);
         mainService.getGrade(name, pos);
     }
+
     public void getRegion(String name, int pos) {
         final MainService mainService = new MainService(this);
         mainService.getRegion(name, pos);
@@ -279,15 +291,22 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         mainService.getEtc(name, pos);
     }
 
-    public void getHourForecast(int pos){
+    public void getEtc2(Double x, Double y, int pos) {
+        final MainService mainService = new MainService(this);
+        mainService.getEtc2(x, y, pos);
+    }
+
+    public void getHourForecast(int pos) {
         final MainService mainService = new MainService(this);
         mainService.getHourForecast(pos);
     }
-    public void getDayForecast(int pos){
+
+    public void getDayForecast(int pos) {
         final MainService mainService = new MainService(this);
         mainService.getDayForecast(pos);
     }
-    public void showNotice(){
+
+    public void showNotice() {
         NoticeDialog noticeDialog = new NoticeDialog(MainActivity.this);
         noticeDialog.callFunction();
     }

@@ -48,7 +48,7 @@ public class BookMarkData {
 
 
     // 뷰 내부 컨텐츠 지정을 위한 컴포넌트
-    public TextView tv_current_location_flag, tv_api_update_time, tv_mise_status, tv_mise_status_details;
+    public TextView tv_current_location_flag, tv_api_update_time, tv_mise_status, tv_mise_status_details, tv_location_name;
     public ImageView iv_statusImage;
     public TextView tv_pm10_mang_name, tv_pm25_mang_name, tv_pm10_station, tv_pm25_station, tv_no2_station,
             tv_o3_station, tv_co_station, tv_so2_station, tv_update_time, tv_details_total_value, tv_details_total_status;

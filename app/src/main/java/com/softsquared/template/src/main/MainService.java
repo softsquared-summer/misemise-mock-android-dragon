@@ -72,6 +72,35 @@ public class MainService {
             }
         });
     }
+    public void getEtc2(double x, double y, final int idx) {
+        final MainRetrofitInterface mainRetrofitInterface = getRetrofit().create(MainRetrofitInterface.class);
+        mainRetrofitInterface.getEtc2(x, y).enqueue(new Callback<EtcResponse>() {
+            @Override
+            public void onResponse(Call<EtcResponse> call, Response<EtcResponse> response) {
+                final EtcResponse etcResponse = response.body();
+                if (etcResponse == null) {
+                    mMainActivityView.validateFailure(null);
+                    return;
+                }
+                Log.e("ectOnResponse2", etcResponse.getCode() + "");
+                if (etcResponse.getCode() == 100) {
+                    mMainActivityView.getEtcResult2(etcResponse.getEtcResult(), idx);
+                    getDayForecast(0);
+                    getHourForecast(0);
+                    getGrade(etcResponse.getEtcResult().getRegion_2depth_name() + " " + etcResponse.getEtcResult().getRegion_3depth_name(), 0);
+
+                    Log.e("ectOnResponse2", etcResponse.getEtcResult().getRegion_2depth_name());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<EtcResponse> call, Throwable t) {
+                mMainActivityView.validateFailure(null);
+                Log.e("etcOnFailure2", t.getLocalizedMessage());
+            }
+        });
+    }
 
 
     public void getGrade(final String region, final int pos) {

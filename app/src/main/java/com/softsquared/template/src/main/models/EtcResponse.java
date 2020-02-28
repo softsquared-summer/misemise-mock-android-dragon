@@ -2,8 +2,6 @@ package com.softsquared.template.src.main.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Time;
-
 public class EtcResponse {
     @SerializedName("isSuccess")
     public boolean isSuccess;
@@ -58,12 +56,12 @@ public class EtcResponse {
             this.region_2depth_name = region_2depth_name;
         }
 
-        public String getRetgion_3depth_name() {
-            return retgion_3depth_name;
+        public String getRegion_3depth_name() {
+            return region_3depth_name;
         }
 
-        public void setRetgion_3depth_name(String retgion_3depth_name) {
-            this.retgion_3depth_name = retgion_3depth_name;
+        public void setRegion_3depth_name(String region_3depth_name) {
+            this.region_3depth_name = region_3depth_name;
         }
 
         public String getCurrent_time() {
@@ -148,8 +146,8 @@ public class EtcResponse {
 
         @SerializedName("region_2depth_name")
         String region_2depth_name;
-        @SerializedName("retgion_3depth_name")
-        String retgion_3depth_name;
+        @SerializedName("region_3depth_name")
+        String region_3depth_name;
         @SerializedName("current_time")
         String current_time;
         @SerializedName("update_time")
