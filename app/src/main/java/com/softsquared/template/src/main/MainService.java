@@ -87,6 +87,9 @@ public class MainService {
                     mMainActivityView.getEtcResult2(etcResponse.getEtcResult(), idx);
                     getDayForecast(0);
                     getHourForecast(0);
+
+
+                    getRegion(etcResponse.getEtcResult().getRegion_2depth_name() + " " + etcResponse.getEtcResult().getRegion_3depth_name(), 0);
                     getGrade(etcResponse.getEtcResult().getRegion_2depth_name() + " " + etcResponse.getEtcResult().getRegion_3depth_name(), 0);
 
                     Log.e("ectOnResponse2", etcResponse.getEtcResult().getRegion_2depth_name());
@@ -196,4 +199,5 @@ public class MainService {
             }
         });
     }
+
 }

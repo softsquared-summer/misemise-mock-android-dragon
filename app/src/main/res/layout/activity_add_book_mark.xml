@@ -53,6 +53,6 @@
         android:text="추가"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorBad"
+        android:background="#ff5353"
         />
 </RelativeLayout>

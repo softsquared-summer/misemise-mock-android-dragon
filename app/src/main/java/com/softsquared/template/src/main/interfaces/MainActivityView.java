@@ -4,10 +4,10 @@ import com.softsquared.template.src.main.models.DayForecastResponse;
 import com.softsquared.template.src.main.models.EtcResponse;
 import com.softsquared.template.src.main.models.GradeResponse;
 import com.softsquared.template.src.main.models.HourForecastResponse;
+import com.softsquared.template.src.preview.models.JapanResponse;
 import com.softsquared.template.src.main.models.NoticeResponse;
 import com.softsquared.template.src.main.models.RegionResponse;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface MainActivityView {
@@ -33,4 +33,5 @@ public interface MainActivityView {
     void getHourForecastResult(ArrayList<HourForecastResponse.ForecastResult> result, int pos);
 
     void getDayForecastResult(ArrayList<DayForecastResponse.ForecastResult> result, int pos);
+
 }

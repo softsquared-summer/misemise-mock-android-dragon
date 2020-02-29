@@ -1,13 +1,15 @@
 package com.softsquared.template.src.main.adapter;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,14 +30,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.softsquared.template.R;
 import com.softsquared.template.src.BookMarkData;
-import com.softsquared.template.src.bookMark.models.BookMarkResponse;
-import com.softsquared.template.src.main.MainService;
-import com.softsquared.template.src.main.fragments.MapFragment;
-import com.softsquared.template.src.main.interfaces.MainActivityView;
+import com.softsquared.template.src.main.MainActivity;
 import com.softsquared.template.src.main.items.PreDayItem;
 import com.softsquared.template.src.main.items.PreTimeItem;
 import com.softsquared.template.src.main.models.DayForecastResponse;
@@ -43,6 +49,11 @@ import com.softsquared.template.src.main.models.EtcResponse;
 import com.softsquared.template.src.main.models.GradeResponse;
 import com.softsquared.template.src.main.models.HourForecastResponse;
 import com.softsquared.template.src.main.models.RegionResponse;
+import com.softsquared.template.src.preview.PreviewImageActivity;
+import com.softsquared.template.src.preview.models.MapResponse;
+import com.softsquared.template.src.preview.preview_interface.PreviewActivityView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,7 +61,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,11 +70,13 @@ import java.util.TimeZone;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class MainViewPagerAdapter extends PagerAdapter {
+public class MainViewPagerAdapter extends PagerAdapter implements OnMapReadyCallback {
     private static final String TAG = "AnimationStarter";
     View view = null;
-
+    Double tm_x = 0.0, tm_y = 0.0;
+    String curStatus = "", curLocation = "";
     boolean mUpdateFlag = true;
+    boolean instantFlag = false;
     private Context mContext;
     ArrayList<BookMarkData> mAlBookMarkData = new ArrayList<>();
 
@@ -72,11 +84,15 @@ public class MainViewPagerAdapter extends PagerAdapter {
         mContext = context;
     }
 
+    @NotNull
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        System.out.println("로딩" + position);
+    public Object instantiateItem(@NotNull ViewGroup container, int position) {
+        Log.e("instantiateItem", position + "로딩");
 
 
+        tm_x = mAlBookMarkData.get(position).tm_x;
+        tm_y = mAlBookMarkData.get(position).tm_y;
+        curLocation = mAlBookMarkData.get(position).getLocation_name();
 //        arrayList
         ArrayList<PreDayItem> mAlPreDayList = new ArrayList<PreDayItem>();
         ArrayList<PreTimeItem> mAlPreTimeList = new ArrayList<PreTimeItem>();
@@ -100,7 +116,6 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
 //        indicator
         final CircleIndicator indicator;
-        final MapFragment fragment1;
 
 //        fragment
         final FragmentManager fragmentManager;
@@ -112,11 +127,19 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
             view = inflater.inflate(R.layout.layout_page, container, false);
 
-            MapFragment mapFragment = new MapFragment();
-            FragmentTransaction transaction = ((Activity) mContext).getFragmentManager().beginTransaction();
-            transaction.add(R.id.llo_fragment, mapFragment);
-            transaction.commit();
 
+            final MapView mapView = view.findViewById(R.id.mapView);
+
+            mapView.setBackgroundColor(Color.TRANSPARENT);
+            mapView.onCreate(null);
+            mapView.onResume();
+            mapView.setScrollContainer(false);
+            mapView.setNestedScrollingEnabled(false);
+            mapView.setClickable(true);
+
+
+
+            mapView.getMapAsync(this);
             //배경색 초기화
             String stateColor = decideColor(position % 4 + 1);
             view.setBackgroundColor(Color.parseColor(stateColor));
@@ -151,17 +174,22 @@ public class MainViewPagerAdapter extends PagerAdapter {
                 @Override
                 public void onPageSelected(int position) {
 //                    Log.e("onPageSelected", "log");
+                    notifyDataSetChanged();
                 }
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
 //                    Log.e("ScrollStateChanged", "log");
+                    notifyDataSetChanged();
+
                 }
             });
             if (mUpdateFlag) { // 애니메이션을 위한 플래그 설정
                 goAnimation(IvStatusImage);
 //                mUpdateFlag = false;
             }
+
+
 
             BookMarkData bookMarkData = mAlBookMarkData.get(position);
             bookMarkData.tv_update_time = view.findViewById(R.id.tv_details_update_time);
@@ -192,8 +220,6 @@ public class MainViewPagerAdapter extends PagerAdapter {
             bookMarkData.tv_mise_status_details = view.findViewById(R.id.tv_miseStatusDetails);
             bookMarkData.tv_details_total_value = view.findViewById(R.id.tv_details_total);
             bookMarkData.tv_details_total_status = view.findViewById(R.id.tv_details_total_status);
-
-
             bookMarkData.iv_statusImage = view.findViewById(R.id.iv_statusImage);
 
 
@@ -271,6 +297,7 @@ public class MainViewPagerAdapter extends PagerAdapter {
 
         //Initialize the pager
         container.addView(view);
+
         return view;
 
 
@@ -409,32 +436,42 @@ public class MainViewPagerAdapter extends PagerAdapter {
     }
 
     public BookMarkData getItem(int pos) {
+        Log.e("어댑터배열크기", mAlBookMarkData.size() + "");
         return mAlBookMarkData.get(pos);
     }
 
     public void setEtcStatus(int pos, EtcResponse.etcResult etcResult) {
+
         String s = null;
         if (etcResult.getUpdate_time() == null) {
             Date now = new Date(System.currentTimeMillis());
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.KOREA);
             inputFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
             s = inputFormat.format(now);
+
         } else {
             s = etcResult.getUpdate_time().toString();
         }
         Log.e("pos", pos + "");
         Log.e("size", mAlBookMarkData.size() + "");
-        mAlBookMarkData.get(pos).tv_location_name.setText(etcResult.getRegion_2depth_name() + " " + etcResult.getRegion_3depth_name());
-        mAlBookMarkData.get(pos).tv_api_update_time.setText(s);
-        mAlBookMarkData.get(pos).tv_update_time.setText(" " + s);
-        mAlBookMarkData.get(pos).tv_pm10_mang_name.setText(" " + etcResult.getPm10_mang_name());
-        mAlBookMarkData.get(pos).tv_pm25_mang_name.setText(" " + etcResult.getPm25_mang_name());
-        mAlBookMarkData.get(pos).tv_pm25_station.setText(" " + etcResult.getPm25_station());
-        mAlBookMarkData.get(pos).tv_pm10_station.setText(" " + etcResult.getPm10_station());
-        mAlBookMarkData.get(pos).tv_no2_station.setText(" " + etcResult.getNo2_station());
-        mAlBookMarkData.get(pos).tv_co_station.setText(" " + etcResult.getCo_station());
-        mAlBookMarkData.get(pos).tv_o3_station.setText(" " + etcResult.getO3_station());
-        mAlBookMarkData.get(pos).tv_so2_station.setText(" " + etcResult.getSo2_station());
+//        curLocation = etcResult.getRegion_3depth_name();
+        BookMarkData bmd = mAlBookMarkData.get(pos);
+        TextView tvtv = bmd.tv_api_update_time;
+//        tvtv.setText("s");
+        if (tvtv != null){
+            mAlBookMarkData.get(pos).tv_api_update_time.setText(s);
+            mAlBookMarkData.get(pos).tv_location_name.setText(etcResult.getRegion_2depth_name() + " " + etcResult.getRegion_3depth_name());
+            mAlBookMarkData.get(pos).tv_update_time.setText(" " + s);
+            mAlBookMarkData.get(pos).tv_pm10_mang_name.setText(" " + etcResult.getPm10_mang_name());
+            mAlBookMarkData.get(pos).tv_pm25_mang_name.setText(" " + etcResult.getPm25_mang_name());
+            mAlBookMarkData.get(pos).tv_pm25_station.setText(" " + etcResult.getPm25_station());
+            mAlBookMarkData.get(pos).tv_pm10_station.setText(" " + etcResult.getPm10_station());
+            mAlBookMarkData.get(pos).tv_no2_station.setText(" " + etcResult.getNo2_station());
+            mAlBookMarkData.get(pos).tv_co_station.setText(" " + etcResult.getCo_station());
+            mAlBookMarkData.get(pos).tv_o3_station.setText(" " + etcResult.getO3_station());
+            mAlBookMarkData.get(pos).tv_so2_station.setText(" " + etcResult.getSo2_station());
+        }
+
         notifyDataSetChanged();
         Log.e("tv_pm10_mang_name", etcResult.getPm10_mang_name());
         Log.e("tv_pm25_mang_name", etcResult.getPm25_mang_name());
@@ -442,8 +479,10 @@ public class MainViewPagerAdapter extends PagerAdapter {
     }
 
     public void setGradeResult(int pos, GradeResponse.gradeResult gradeResult) {
+        notifyDataSetChanged();
         BookMarkData bookMarkData = mAlBookMarkData.get(pos);
         int cur_grade = gradeResult.getCurrent_status_grade();
+
         int total_grade = gradeResult.getTotal_grade();
         float pm10_grade = (float) gradeResult.getPm10_grade();
         float pm25_grade = (float) gradeResult.getPm25_grade();
@@ -451,105 +490,146 @@ public class MainViewPagerAdapter extends PagerAdapter {
         float o3_grade = (float) gradeResult.getO3_grade();
         float co_grade = (float) gradeResult.getCo_grade();
         float so2_grade = (float) gradeResult.getSo2_grade();
-
-        bookMarkData.mInPagePagerAdapter.addGradeItem(pm10_grade);
-        bookMarkData.mInPagePagerAdapter.addGradeItem(pm25_grade);
-        bookMarkData.mInPagePagerAdapter.addGradeItem(no2_grade);
-        bookMarkData.mInPagePagerAdapter.addGradeItem(o3_grade);
-        bookMarkData.mInPagePagerAdapter.addGradeItem(co_grade);
-        bookMarkData.mInPagePagerAdapter.addGradeItem(so2_grade);
-        mAlBookMarkData.get(pos).mInPagePagerAdapter.myGradeNotifyDataSetChanged();
-
-        switch (cur_grade) {
-            case 1:
-                bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_1);
-                bookMarkData.tv_mise_status.setText("좋음");
-                bookMarkData.tv_mise_status_details.setText("신선한 공기 많이 마시세요~");
-                break;
-            case 2:
-                bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_2);
-                bookMarkData.tv_mise_status.setText("양호");
-                bookMarkData.tv_mise_status_details.setText("쾌적한 날이에요~");
-                break;
-            case 3:
-                bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_3);
-                bookMarkData.tv_mise_status.setText("보통");
-                bookMarkData.tv_mise_status_details.setText("그냥 무난한 날이에요");
-                break;
-            case 4:
-                bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_4);
-                bookMarkData.tv_mise_status.setText("나쁨");
-                bookMarkData.tv_mise_status_details.setText("탁한 공기, 마스크 챙기세요~");
-                break;
-            case 5:
-                bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_0);
-                bookMarkData.tv_mise_status.setText("점검중인 지역입니다.");
-                bookMarkData.tv_mise_status_details.setText("setting...");
-                break;
-        }
-        switch (total_grade) {
-            case 1:
-                bookMarkData.tv_details_total_status.setText(" 좋음 (최근 24시간 평균)");
-                break;
-            case 2:
-                bookMarkData.tv_details_total_status.setText(" 양호 (최근 24시간 평균)");
-                break;
-            case 3:
-                bookMarkData.tv_details_total_status.setText(" 보통 (최근 24시간 평균)");
-                break;
-            case 4:
-                bookMarkData.tv_details_total_status.setText(" 나쁨 (최근 24시간 평균)");
-                break;
-            case 5:
-                break;
+        Log.e("total_grade", "결과: "+gradeResult.getTotal_grade());
+        if(bookMarkData.mInPagePagerAdapter != null){
+            bookMarkData.mInPagePagerAdapter.addGradeItem(pm10_grade);
+            bookMarkData.mInPagePagerAdapter.addGradeItem(pm25_grade);
+            bookMarkData.mInPagePagerAdapter.addGradeItem(no2_grade);
+            bookMarkData.mInPagePagerAdapter.addGradeItem(o3_grade);
+            bookMarkData.mInPagePagerAdapter.addGradeItem(co_grade);
+            bookMarkData.mInPagePagerAdapter.addGradeItem(so2_grade);
+            mAlBookMarkData.get(pos).mInPagePagerAdapter.myGradeNotifyDataSetChanged();
         }
 
-        String stateColor = decideColor(cur_grade);
-        bookMarkData.v_main.setBackgroundColor(Color.parseColor(stateColor));
-        String cardBackColor = decideCardColor(cur_grade);
-        bookMarkData.card_time_pre.setBackgroundColor(Color.parseColor(cardBackColor));
-        bookMarkData.card_six_status.setBackgroundColor(Color.parseColor(cardBackColor));
-        bookMarkData.card_searcher_info.setBackgroundColor(Color.parseColor(cardBackColor));
-        bookMarkData.card_details.setBackgroundColor(Color.parseColor(cardBackColor));
-        bookMarkData.card_day_pre.setBackgroundColor(Color.parseColor(cardBackColor));
-        bookMarkData.card_ad.setBackgroundColor(Color.parseColor(cardBackColor));
 
+        if(bookMarkData.iv_statusImage != null){
+            switch (cur_grade) {
+                case 1:
+                    bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_1);
+                    bookMarkData.tv_mise_status.setText("좋음");
+                    bookMarkData.tv_mise_status_details.setText("신선한 공기 많이 마시세요~");
+                    break;
+                case 2:
+                    bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_2);
+                    bookMarkData.tv_mise_status.setText("양호");
+                    bookMarkData.tv_mise_status_details.setText("쾌적한 날이에요~");
+                    break;
+                case 3:
+                    bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_3);
+                    bookMarkData.tv_mise_status.setText("보통");
+                    bookMarkData.tv_mise_status_details.setText("그냥 무난한 날이에요");
+                    break;
+                case 4:
+                    bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_4);
+                    bookMarkData.tv_mise_status.setText("나쁨");
+                    bookMarkData.tv_mise_status_details.setText("탁한 공기, 마스크 챙기세요~");
+                    break;
+                case 5:
+                    bookMarkData.iv_statusImage.setImageResource(R.drawable.ic_smile_0);
+                    bookMarkData.tv_mise_status.setText("점검중인 지역입니다.");
+                    bookMarkData.tv_mise_status_details.setText("setting...");
+                    break;
+            }
+            switch (total_grade) {
+                case 1:
+                    bookMarkData.tv_details_total_status.setText(" 좋음 (최근 24시간 평균)");
+                    break;
+                case 2:
+                    bookMarkData.tv_details_total_status.setText(" 양호 (최근 24시간 평균)");
+                    break;
+                case 3:
+                    bookMarkData.tv_details_total_status.setText(" 보통 (최근 24시간 평균)");
+                    break;
+                case 4:
+                    bookMarkData.tv_details_total_status.setText(" 나쁨 (최근 24시간 평균)");
+                    break;
+                case 5:
+                    break;
+            }
+            String stateColor = decideColor(cur_grade);
+            bookMarkData.v_main.setBackgroundColor(Color.parseColor(stateColor));
+            String cardBackColor = decideCardColor(cur_grade);
+            bookMarkData.card_time_pre.setBackgroundColor(Color.parseColor(cardBackColor));
+            bookMarkData.card_six_status.setBackgroundColor(Color.parseColor(cardBackColor));
+            bookMarkData.card_searcher_info.setBackgroundColor(Color.parseColor(cardBackColor));
+            bookMarkData.card_details.setBackgroundColor(Color.parseColor(cardBackColor));
+            bookMarkData.card_day_pre.setBackgroundColor(Color.parseColor(cardBackColor));
+            bookMarkData.card_ad.setBackgroundColor(Color.parseColor(cardBackColor));
+        }
     }
 
     public void setRegionStatus(int pos, RegionResponse.result result) {
+        notifyDataSetChanged();
         BookMarkData bookMarkData = mAlBookMarkData.get(pos);
 
+        if(bookMarkData.tv_details_total_status != null){
+            bookMarkData.tv_details_total_value.setText(" " + result.getTotal_value() + " unit (최근 24시간 평균)");
+            bookMarkData.mInPagePagerAdapter.infos = new ArrayList<Float>();
+            bookMarkData.mInPagePagerAdapter.addItem((float) result.getPm10_value());
+            bookMarkData.mInPagePagerAdapter.addItem((float) result.getPm25_value());
+            bookMarkData.mInPagePagerAdapter.addItem((float) result.getNo2_value());
+            bookMarkData.mInPagePagerAdapter.addItem((float) result.getO3_value());
+            bookMarkData.mInPagePagerAdapter.addItem((float) result.getCo_value());
+            bookMarkData.mInPagePagerAdapter.addItem((float) result.getSo2_value());
+            mAlBookMarkData.get(pos).mInPagePagerAdapter.myNotifyDataSetChanged();
+        }
 
-        bookMarkData.tv_details_total_value.setText(" " + result.getTotal_value() + " unit (최근 24시간 평균)");
-
-
-        bookMarkData.mInPagePagerAdapter.infos = new ArrayList<Float>();
-        bookMarkData.mInPagePagerAdapter.addItem((float) result.getPm10_value());
-        bookMarkData.mInPagePagerAdapter.addItem((float) result.getPm25_value());
-        bookMarkData.mInPagePagerAdapter.addItem((float) result.getNo2_value());
-        bookMarkData.mInPagePagerAdapter.addItem((float) result.getO3_value());
-        bookMarkData.mInPagePagerAdapter.addItem((float) result.getCo_value());
-        bookMarkData.mInPagePagerAdapter.addItem((float) result.getSo2_value());
-
-        mAlBookMarkData.get(pos).mInPagePagerAdapter.myNotifyDataSetChanged();
 
     }
 
     public void setHourForecast(ArrayList<HourForecastResponse.ForecastResult> result, int pos) {
-        BookMarkData bookMarkData = mAlBookMarkData.get(pos);
 
-        for (int i = 0; i < result.size(); i++) {
-            bookMarkData.mRecyclerPreTimeAdapter.addItem(new PreTimeItem(result.get(i).getHour(), result.get(i).getCurrent_grade()));
+        BookMarkData bookMarkData = mAlBookMarkData.get(pos);
+        if(bookMarkData.mRecyclerPreTimeAdapter!=null){
+            for (int i = 0; i < result.size(); i++) {
+                bookMarkData.mRecyclerPreTimeAdapter.addItem(new PreTimeItem(result.get(i).getHour(), result.get(i).getCurrent_grade()));
+            }
+            bookMarkData.mRecyclerPreTimeAdapter.notifyDataSetChanged();
         }
-        bookMarkData.mRecyclerPreTimeAdapter.notifyDataSetChanged();
+
     }
 
     public void setDayForecast(ArrayList<DayForecastResponse.ForecastResult> result, int pos) {
+        notifyDataSetChanged();
         BookMarkData bookMarkData = mAlBookMarkData.get(pos);
-
-        for (int i = 0; i < result.size(); i++) {
-            bookMarkData.mRecyclerPreDayAdapter.addItem(new PreDayItem(result.get(i).getDay(), result.get(i).getTime(), result.get(i).getCurrent_grade()));
+        if(bookMarkData.mRecyclerPreDayAdapter != null){
+            for (int i = 0; i < result.size(); i++) {
+                bookMarkData.mRecyclerPreDayAdapter.addItem(new PreDayItem(result.get(i).getDay(), result.get(i).getTime(), result.get(i).getCurrent_grade()));
+            }
+            bookMarkData.mRecyclerPreDayAdapter.notifyDataSetChanged();
         }
-        bookMarkData.mRecyclerPreDayAdapter.notifyDataSetChanged();
+
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.e("MapFragment", "onMapReady");
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Intent intent = new Intent(mContext, PreviewImageActivity.class);
+                Bundle args = new Bundle();
+                args.putDouble("latitude", tm_y);
+                args.putDouble("longitude", tm_x);
+                args.putString("station", curLocation);
+                intent.putExtra("bundle", args);
+                mContext.startActivity(intent);
+            }
+        });
+
+
+//        MapsInitializer.initialize(mContext);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        Log.e("onMapReady", "myLoc : " + tm_x + " " + tm_y);
+        LatLng myLoc = new LatLng(tm_y, tm_x);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(myLoc);
+        if(curLocation != "")
+            markerOptions.title(curLocation);
+        googleMap.addMarker(markerOptions);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(9));
+    }
+
+
 }

@@ -17,7 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.GoogleMap;
 import com.softsquared.template.R;
+import com.softsquared.template.src.preview.PreviewService;
+import com.softsquared.template.src.preview.models.JapanResponse;
+import com.softsquared.template.src.preview.models.MapResponse;
+import com.softsquared.template.src.preview.preview_interface.PreviewActivityView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,9 +31,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class JapanFragment extends Fragment {
+public class JapanFragment extends Fragment implements PreviewActivityView {
     ArrayList<String> mAlPictures;
     ArrayList<Bitmap> mAlBitmapPictures;
+    ArrayList<String> mAlJapanImage;
     SeekBar mSeekBar;
     ImageButton mIbtn_play, mIbtn_goNext, mIbtn_goPrev, mIbtn_cancel;
     ImageView mIv_japanImage;
@@ -40,7 +46,9 @@ public class JapanFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAlPictures = new ArrayList<String>();
         mAlBitmapPictures = new ArrayList<Bitmap>();
-        forcedInit();
+        if(mAlPictures.size() == 0)
+            getJapan();
+
     }
 
     @Nullable
@@ -55,15 +63,14 @@ public class JapanFragment extends Fragment {
         mIbtn_cancel = layout.findViewById(R.id.ibtn_cancel_japan);
 
 
-
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
 //                Glide.with(JapanFragment.this).load(mAlPictures.get(mSeekBarPosition)).dontAnimate().into(mIv_japanImage);
-                if(mSeekBarPosition < mAlBitmapPictures.size())
+                if (mSeekBarPosition < mAlBitmapPictures.size())
                     mIv_japanImage.setImageBitmap(mAlBitmapPictures.get(mSeekBarPosition));
-                else{
+                else {
                     mSeekBar.setProgress(0);
                     mPlayFlag = false;
                     mIbtn_play.setImageResource(R.drawable.ic_right_black);
@@ -92,12 +99,12 @@ public class JapanFragment extends Fragment {
         mIbtn_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!mPlayFlag){
+                if (!mPlayFlag) {
                     mPlayFlag = true;
                     mSeekBarPosition %= mAlBitmapPictures.size();
                     mIbtn_play.setImageResource(R.drawable.pause);
                     startTimerThread();
-                }else{
+                } else {
                     mPlayFlag = false;
                     mIbtn_play.setImageResource(R.drawable.ic_right_black);
                 }
@@ -114,13 +121,12 @@ public class JapanFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mSeekBarPosition++;
-                if(mSeekBarPosition >= mAlBitmapPictures.size()) {
+                if (mSeekBarPosition >= mAlBitmapPictures.size()) {
                     mPlayFlag = false;
                     mIbtn_play.setImageResource(R.drawable.ic_right_black);
                     mSeekBarPosition = 0;
                     mSeekBar.setProgress(0);
-                }
-                else{
+                } else {
                     mSeekBarPosition %= mAlBitmapPictures.size();
                     mSeekBar.setProgress(mSeekBarPosition);
                 }
@@ -134,18 +140,16 @@ public class JapanFragment extends Fragment {
 
 
     void forcedInit() {
-        for (int i = 24; i <= 69; i += 3) {
-            mAlPictures.add("https://static.tenki.jp/static-images/pm25/" + i + "/japan-detail/large.jpg");
-        }
         for (int i = 0; i < mAlPictures.size(); i++) {
             URL url = null;
             DownloadImageTask downloadImageTask = new DownloadImageTask(mAlBitmapPictures, new AsyncTaskCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    if(mAlBitmapPictures.size() == 1){
+                    if (mAlBitmapPictures.size() == 1) {
                         mIv_japanImage.setImageBitmap(mAlBitmapPictures.get(0));
                     }
                 }
+
                 @Override
                 public void onFailure(String e) {
 
@@ -183,53 +187,26 @@ public class JapanFragment extends Fragment {
         };
         new Thread(runnable).start();
     }
-//
-//    public static Bitmap getBitmapFromURL(String src) {
-//        try {
-//            URL url = new URL(src);
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setDoInput(true);
-//            connection.connect();
-//            InputStream input = connection.getInputStream();
-//            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-//            return myBitmap;
-//        } catch (IOException e) {
-//            // Log exception
-//            return null;
-//        }
-//    }
-//    public class DownloadImagesTask extends AsyncTask<ImageView, Void, Bitmap> {
-//        Bitmap bitmap = null;
-//
-//        @Override
-//        protected Bitmap doInBackground(Bitmap... Bitmap) {
-//            this.bitmap = Bitmap[0];
-//            return bitmap;
-//        }
-//
-//        @Override
-//        protected Bitmap doInBackground(ImageView... imageViews) {
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap result) {
-//            bitmap =  result;
-//        }
-//        private Bitmap download_Image(String src) {
-//            try {
-//                URL url = new URL(src);
-//                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                connection.setDoInput(true);
-//                connection.connect();
-//                InputStream input = connection.getInputStream();
-//                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-//                return myBitmap;
-//            } catch (IOException e) {
-//                // Log exception
-//                return null;
-//            }
-//
-//        }
-//    }
+
+    @Override
+    public void validateFailure(String message) {
+        Log.e("JapanFragment", "validateFailure");
+    }
+
+    @Override
+    public void getMapResult(ArrayList<MapResponse.MapResult> result, GoogleMap googleMap) {
+        return;
+    }
+
+    @Override
+    public void getJapanResult(ArrayList<String> result) {
+        mAlPictures = result;
+        Log.e("result배열", mAlPictures.toString());
+
+        forcedInit();
+    }
+    public void getJapan(){
+        final PreviewService previewService = new PreviewService(this);
+        previewService.getJapan();
+    }
 }

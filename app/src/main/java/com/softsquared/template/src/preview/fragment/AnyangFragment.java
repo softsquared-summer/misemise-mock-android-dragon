@@ -77,7 +77,6 @@ public class AnyangFragment extends Fragment {
         mIbtnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("클릭됨", "클릭됐다고");
 
                 if (playing) {
                     if (modeFlag == false) {

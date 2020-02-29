@@ -2,7 +2,6 @@ package com.softsquared.template.src.preview.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,19 +18,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.softsquared.template.R;
 import com.softsquared.template.src.preview.PreviewService;
+import com.softsquared.template.src.preview.models.JapanResponse;
 import com.softsquared.template.src.preview.models.MapResponse;
 import com.softsquared.template.src.preview.preview_interface.PreviewActivityView;
 
 import java.util.ArrayList;
 
 public class MiseMapFragment extends Fragment implements OnMapReadyCallback, PreviewActivityView {
-
+    Double lat = 0.0, lon = 0.0;
+    String pickedStation = null;
+    String miseStatus = null;
     private MapView mapView = null;
     ImageButton mIbtnMiseCancel;
+    MarkerOptions mMarkerOptions;
+    ArrayList<BitmapDrawable> mBitmapdraws_small, mBitmapdraws_smile;
     ArrayList<MapResponse.MapResult> mAlMapList;
     FusedLocationProviderClient mFusedLocationClient;
     @Override
@@ -44,6 +50,15 @@ public class MiseMapFragment extends Fragment implements OnMapReadyCallback, Pre
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.layout_mise_map_fragment, container, false);
         mapView = (MapView)layout.findViewById(R.id.mise_map);
+        mMarkerOptions = new MarkerOptions();
+        mBitmapdraws_small = new ArrayList<BitmapDrawable>();
+        mBitmapdraws_smile = new ArrayList<BitmapDrawable>();
+
+        mBitmapdraws_small.add((BitmapDrawable) getResources().getDrawable(R.drawable.good));
+        mBitmapdraws_small.add((BitmapDrawable) getResources().getDrawable(R.drawable.not_bad));
+        mBitmapdraws_small.add((BitmapDrawable) getResources().getDrawable(R.drawable.soso));
+        mBitmapdraws_small.add((BitmapDrawable) getResources().getDrawable(R.drawable.bad));
+        mBitmapdraws_smile.add((BitmapDrawable) getResources().getDrawable(R.drawable.good));
         mIbtnMiseCancel = layout.findViewById(R.id.ibtn_mise_back);
         mapView.getMapAsync((OnMapReadyCallback) this);
         mIbtnMiseCancel.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +67,24 @@ public class MiseMapFragment extends Fragment implements OnMapReadyCallback, Pre
                 getActivity().finish();
             }
         });
+        lat = 0.0;
+        lon = 0.0;
+        pickedStation=null;
+        miseStatus = null;
+        if(getActivity().getIntent().hasExtra("bundle")){
+            Bundle bundle = getActivity().getIntent().getBundleExtra("bundle");
+            if(bundle != null){
+                lat = bundle.getDouble("latitude");
+                lon = bundle.getDouble("longitude");
+                pickedStation= bundle.getString("station");
+                miseStatus = bundle.getString("status");
+            }
+        }
+
+
+
+
+
         return layout;
     }
 
@@ -101,7 +134,6 @@ public class MiseMapFragment extends Fragment implements OnMapReadyCallback, Pre
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //액티비티가 처음 생성될 때 실행되는 함수
 
         if(mapView != null)
         {
@@ -110,19 +142,24 @@ public class MiseMapFragment extends Fragment implements OnMapReadyCallback, Pre
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         LatLng SEOUL = new LatLng(37.56, 126.97);
 
-        // 여기서 일단 한번 호출해서 리스트에 측정소 좌표 전체를 받고 다시 488번 전부 호출해서 마커 찍어주기
 
-
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(SEOUL);
-//        markerOptions.title("서울");
-//        markerOptions.snippet("수도");
-//        googleMap.addMarker(markerOptions);
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(6));
+
+        googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                CameraPosition cameraPosition = googleMap.getCameraPosition();
+                if(cameraPosition.zoom > 18.0) {
+
+                } else {
+
+                }
+            }
+        });
 
         getMap(googleMap);
     }
@@ -135,35 +172,53 @@ public class MiseMapFragment extends Fragment implements OnMapReadyCallback, Pre
     @Override
     public void getMapResult(ArrayList<MapResponse.MapResult> result, GoogleMap googleMap) {
         mAlMapList = result;
-
         Log.e("지도", mAlMapList.size() + "");
         for(int i=0;i<mAlMapList.size();i++){
             double cury = mAlMapList.get(i).getY();
             double curx = mAlMapList.get(i).getX();
             String curGrade = mAlMapList.get(i).getCurrent_status_grade();
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(new LatLng(cury, curx));
+            String titleName = mAlMapList.get(i).getStation_name();
             BitmapDrawable bitmapdraw;
+            mMarkerOptions.position(new LatLng(cury, curx));
+            mMarkerOptions.title(titleName);
             if(curGrade != null) {
                 if (curGrade.equals("좋음")) {
                     bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.good);
+                    mMarkerOptions.snippet("좋음");
                 } else if (curGrade.equals("양호")) {
                     bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.not_bad);
+                    mMarkerOptions.snippet("양호");
                 } else if (curGrade.equals("보통")) {
                     bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.soso);
+                    mMarkerOptions.snippet("보통");
                 } else if (curGrade.equals("나쁨")) {
+                    mMarkerOptions.snippet("나쁨");
                     bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.bad);
                 } else {
                     bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.soso);
+                    mMarkerOptions.snippet("점검중");
                 }
 
                 Bitmap b = bitmapdraw.getBitmap();
-                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 30, 30, false);
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 40, 40, false);
+                mMarkerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
             }
-            // 이제여기서 api 또 호출해서 받으면 마커 설정해서 거기 설정한대서 마커 칠해주는걸로 바꿔야함.
-            googleMap.addMarker(markerOptions);
+            googleMap.addMarker(mMarkerOptions);
         }
+        if(pickedStation != null){
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(new LatLng(lat, lon));
+            markerOptions.title(pickedStation);
+            markerOptions.snippet("상태 : " + miseStatus);
+            googleMap.addMarker(markerOptions);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        }
+    }
+
+    @Override
+    public void getJapanResult(ArrayList<String> result) {
+
     }
 
     public void getMap(GoogleMap googleMap){

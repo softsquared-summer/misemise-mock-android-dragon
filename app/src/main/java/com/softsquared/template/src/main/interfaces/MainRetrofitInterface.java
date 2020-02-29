@@ -3,6 +3,7 @@ package com.softsquared.template.src.main.interfaces;
 import com.softsquared.template.src.main.models.DayForecastResponse;
 import com.softsquared.template.src.main.models.EtcResponse;
 import com.softsquared.template.src.main.models.HourForecastResponse;
+import com.softsquared.template.src.preview.models.JapanResponse;
 import com.softsquared.template.src.main.models.NoticeResponse;
 import com.softsquared.template.src.main.models.RegionResponse;
 import com.softsquared.template.src.main.models.GradeResponse;
@@ -24,7 +25,7 @@ public interface MainRetrofitInterface {
     @GET("/dust/grade")
     Call<GradeResponse> getGrade(@Query("region") String region);
 
-    @GET("/notice")
+    @GET("/rtdbGet ")
     Call<NoticeResponse> getNotice();
 
     @GET("/hourForecast")
@@ -32,4 +33,6 @@ public interface MainRetrofitInterface {
 
     @GET("/dayForecast")
     Call<DayForecastResponse> getDayForecast();
+
+
 }

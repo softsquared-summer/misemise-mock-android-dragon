@@ -40,11 +40,10 @@
                 android:src="@drawable/ic_menu" />
 
             <ImageButton
-                android:id="@+id/ibtn_map"
+                android:id="@+id/ibtn_openMap"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentTop="true"
-
                 android:layout_marginTop="10dp"
                 android:layout_toLeftOf="@id/ibtn_share"
                 android:background="#00FFFFFF"
@@ -96,7 +95,7 @@
 
         <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -107,7 +106,7 @@
         <ImageButton
             android:id="@+id/ibtn_who"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -118,7 +117,7 @@
         <ImageButton
             android:id="@+id/ibtn_eight"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -128,7 +127,7 @@
 
         <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -139,7 +138,7 @@
         <ImageButton
             android:id="@+id/btn_info"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -150,7 +149,7 @@
         <ImageButton
             android:id="@+id/ibtn_preview_image"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -161,7 +160,7 @@
         <ImageButton
             android:id="@+id/ibtn_set_alarm"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -172,7 +171,7 @@
         <ImageButton
             android:id="@+id/ibtn_setting"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"
@@ -182,7 +181,7 @@
 
         <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="43dp"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingRight="0dp"

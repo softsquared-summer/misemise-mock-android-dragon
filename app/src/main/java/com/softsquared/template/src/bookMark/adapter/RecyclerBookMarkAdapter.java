@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -45,13 +46,15 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
     public RecyclerBookMarkAdapter(ArrayList<BookMarkData> list, Context context) {
         mData = list;
         mContext = context;
+        for(int i=0;i<list.size();i++){
+            Log.e("list",list.get(i).getMise_status() + "");
+        }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.e("onCreateViewHolder", "리사이클러 뷰 로드");
         Context context = parent.getContext();
-        // initFlag();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.layout_book_mark_item, parent, false);
         RecyclerBookMarkAdapter.ViewHolder vh = new RecyclerBookMarkAdapter.ViewHolder(view);
@@ -72,6 +75,11 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         String curStatus = item.getMise_status();
         holder.tvLocation.setText(item.getLocation_name());
         holder.tvStatus.setText(curStatus);
+        if(item.getMise_status() == null) Log.e("item.getMise_status()","item.getMise_status() is null");
+        else Log.e("item.getMise_status()", position + " : " + item.getMise_status());
+
+//        Log.e("rv_position", position + "");
+//        Log.e("rv_mDataSize", mData.size() + "");
 
         if (curStatus.equals("좋음")) {
             holder.rlo_book_mark_image.setBackgroundColor(Color.parseColor("#0277bd"));
@@ -97,11 +105,12 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
         if (mData.get(position).isEditFlag() && position != 0) {
             holder.tvLocation.startAnimation(animateSlideLeftToRight);
             holder.cb_book_mark_list_checker.startAnimation(animateSlideLeftToRight);
-            holder.iv_upDownChange.startAnimation(animateSlideRightToLeft);
+            placeChange(holder.iv_upDownChange, 130);
             holder.rlo_book_mark_image.setVisibility(INVISIBLE);
             holder.cb_book_mark_list_checker.setChecked(false);
         } else {
             holder.rlo_book_mark_image.setVisibility(View.VISIBLE);
+            placeBack(holder.iv_upDownChange, 130);
         }
         if (item.isDeleteFlag() == true) {
             mData.remove(position);
@@ -208,6 +217,64 @@ public class RecyclerBookMarkAdapter extends RecyclerView.Adapter<RecyclerBookMa
             mData.get(i).setEditFlag(false);
         }
     }
+    public void placeChange(final ImageButton ibtn, final int interval){
+        ibtn.clearAnimation();
+        TranslateAnimation translateAnimationDtoU= new TranslateAnimation(0, -interval, 0, 0);
+        translateAnimationDtoU.setDuration(400);
+        translateAnimationDtoU.setFillAfter(true);
 
+        translateAnimationDtoU.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                final int left = ibtn.getLeft();
+                final int top = ibtn.getTop();
+                final int right = ibtn.getRight();
+                final int bottom = ibtn.getBottom();
+                ibtn.layout(left - interval, top, right - interval, bottom);
+                ibtn.clearAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        ibtn.startAnimation(translateAnimationDtoU);
+    }
+    public void placeBack(final ImageButton ibtn, final int interval){
+        ibtn.clearAnimation();
+        TranslateAnimation translateAnimationDtoU= new TranslateAnimation(0, +interval, 0, 0);
+        translateAnimationDtoU.setDuration(400);
+        translateAnimationDtoU.setFillAfter(true);
+
+        translateAnimationDtoU.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                final int left = ibtn.getLeft();
+                final int top = ibtn.getTop();
+                final int right = ibtn.getRight();
+                final int bottom = ibtn.getBottom();
+                ibtn.layout(left + interval, top, right + interval, bottom);
+                ibtn.clearAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        ibtn.startAnimation(translateAnimationDtoU);
+    }
 }

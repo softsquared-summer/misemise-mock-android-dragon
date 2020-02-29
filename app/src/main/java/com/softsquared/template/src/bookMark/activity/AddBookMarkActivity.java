@@ -1,11 +1,14 @@
 package com.softsquared.template.src.bookMark.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.softsquared.template.R;
 import com.softsquared.template.src.BaseActivity;
@@ -65,17 +68,27 @@ public class AddBookMarkActivity extends BaseActivity implements AddBookMarkActi
         mResponseCode = code;
         Log.e("getRegionCode" , "message : " + code);
         if(mResponseCode != 100){
-            showCustomToast("주소를 잘못 입력했어요.");
+//            AlertDialog.Builder builder = new AlertDialog.Builder(AddBookMarkActivity.this);
+//            builder.setTitle("경고!").setMessage("올바르지 않은 주소입니다.");
+//            AlertDialog alertDialog = builder.create();
+//            alertDialog.show();
         }
         else{
+
+
             String locStr = mResultList.get(0).getRegion_2depth_name() + " "  + mResultList.get(0).getRegion_3depth_name();
+            Log.e("AddBookMarkActivity", "loccatio result"+ mResultList.get(0).getRegion_3depth_name());
             BookMarkData newData = new BookMarkData(locStr);
+            newData.tm_x = mResultList.get(0).getTm_x().doubleValue();
+            newData.tm_y = mResultList.get(0).getTm_y().doubleValue();
             list = getBookMarkList();
             list.add(newData);
             saveBookMarkList(list);
             actFinish();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("restart", true);
             startActivity(intent);
+
             finish();
         }
     }

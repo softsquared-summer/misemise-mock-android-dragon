@@ -19,7 +19,7 @@ public class BookMarkData {
     public InPageViewPagerAdapter mInPagePagerAdapter;
     public RecyclerPreTimeAdapter mRecyclerPreTimeAdapter;
     public RecyclerPreDayAdapter mRecyclerPreDayAdapter;
-
+    public Double tm_x, tm_y;
 
     public BookMarkData(){
         regionResponse_result = new RegionResponse.result();
@@ -27,6 +27,12 @@ public class BookMarkData {
 
     public BookMarkData(String location_name) {
         this.location_name = location_name;
+        regionResponse_result = new RegionResponse.result();
+    }
+    public BookMarkData(String location_name, Double tm_x, Double tm_y) {
+        this.location_name = location_name;
+        this.tm_x = tm_x;
+        this.tm_y = tm_y;
         regionResponse_result = new RegionResponse.result();
     }
 

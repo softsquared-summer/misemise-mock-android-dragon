@@ -103,7 +103,7 @@ public class InPageViewPagerAdapter extends PagerAdapter {
     }
 
     public void myGradeNotifyDataSetChanged() {
-        for (int i = 0; i < grades.size(); i++) {
+        for (int i = 0; i < 6; i++) {
             String strGrade = decidePageGrade(grades.get(i));
             ((TextView) tv_grades.get(i)).setText(strGrade);
             if (strGrade.equals("좋음"))

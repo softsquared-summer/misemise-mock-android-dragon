@@ -21,6 +21,7 @@ import com.softsquared.template.src.BaseActivity;
 import com.softsquared.template.src.BookMarkData;
 import com.softsquared.template.src.bookMark.BookMarkDialog;
 import com.softsquared.template.src.bookMark.adapter.RecyclerBookMarkAdapter;
+import com.softsquared.template.src.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,11 +50,18 @@ public class BookMarkActivity extends BaseActivity {
         mAlBookMarkDataList = getBookMarkList();
         Intent intent = getIntent();
         HashMap<String, String> hashMap = (HashMap<String, String>)intent.getSerializableExtra("hashMap");
+
+        for(int i =  0; i < mAlBookMarkDataList.size(); i++){
+            Log.e("BookMarkActivity","mAlBookMarkDataList.get(i).getMise_status() : " + mAlBookMarkDataList.get(i).getMise_status());
+            Log.e("BookMarkActivity","mAlBookMarkDataList.get(i).getLocation_name() : " + mAlBookMarkDataList.get(i).getLocation_name());
+        }
+
+        Log.e("BookMarkActivity","hashMap : " + hashMap.toString());
+
         for(int i=0;i<mAlBookMarkDataList.size();i++){
             mAlBookMarkDataList.get(i).setMise_status(hashMap.get(mAlBookMarkDataList.get(i).getLocation_name()));
         }
         saveBookMarkList(mAlBookMarkDataList);
-
 
 
         rvBookMark = findViewById(R.id.rv_bookMarkList);
@@ -66,9 +74,11 @@ public class BookMarkActivity extends BaseActivity {
 
          rlo_deleteDialog = findViewById(R.id.rlo_deleteDialog);
 
-        mAlBookMarkDataList = getBookMarkList();
+        // mAlBookMarkDataList = getBookMarkList();
+        Log.e("mAlBookMarkDataList", mAlBookMarkDataList.size() + "");
         mRecyclerBookMarkAdapter.notifyDataSetChanged();
         mbtnAddBookMark = findViewById(R.id.btn_add_book_mark);
+
         mbtnAddBookMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +108,10 @@ public class BookMarkActivity extends BaseActivity {
                 mRecyclerBookMarkAdapter.controlEditMode(false);
                 mRecyclerBookMarkAdapter.notifyDataSetChanged();
                 Log.e("deleteChecked", "실행은함");
+                actFinish();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("restart", true);
+                startActivity(intent);
             }
         });
 
@@ -141,6 +155,9 @@ public class BookMarkActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(getBookMarkList().size() != mAlBookMarkDataList.size()){
+            onRestart();
+        }
         mRecyclerBookMarkAdapter.notifyDataSetChanged();
     }
 
@@ -175,6 +192,7 @@ public class BookMarkActivity extends BaseActivity {
         });
         rlo.startAnimation(translateAnimationDtoU);
     }
+
     public void finishAnimation(final RelativeLayout rlo){
         rlo.clearAnimation();
         TranslateAnimation translateAnimationUtoD= new TranslateAnimation(0, 0, 0, +mAnimationMargin);

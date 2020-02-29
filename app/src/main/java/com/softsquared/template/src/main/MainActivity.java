@@ -1,9 +1,8 @@
 package com.softsquared.template.src.main;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +31,7 @@ import com.softsquared.template.src.sidebar.activity.SideEightStage;
 import com.softsquared.template.src.sidebar.activity.SideInfoActivity;
 import com.softsquared.template.src.sidebar.activity.SideSetting;
 import com.softsquared.template.src.sidebar.activity.SideWho;
+import com.softsquared.template.src.splash.SplashActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,50 +41,75 @@ import retrofit2.Retrofit;
 public class MainActivity extends BaseActivity implements MainActivityView {
     private ViewPager mViewPager;
     private MainViewPagerAdapter mPagerAdapter;
-    private ImageButton mIbtnOpenDrawer, mIbtnShare, mIbtnBookMark, mIbtn_preview_image, mIbtn_set_alarm;
+    private ImageButton mIbtnOpenDrawer, mIbtnShare, mIbtnBookMark, mIbtn_preview_image, mIbtn_set_alarm, mIbtn_openMap;
     private ImageButton mIbtnInfo, mIbtnEight, mIbtnSetting, mIbtnWho;
     private ImageView mIvMainAd;
     private Retrofit mRetrofit;
+    double latitude = 37.30276, longitude = 127.02444;
+
     private RegionResponse.result mResult;
     ArrayList<BookMarkData> mAlBookMarkData, mAlNewData;
-
+    boolean pagerReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.e("Main", "main was created");
+
+        // 어댑터 생성 ( 메인 뷰 페이저 )
+        mPagerAdapter = new MainViewPagerAdapter(this);
+        mViewPager = findViewById(R.id.viewPager);
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(10);
 
         actList.add(this);
 
         mAlBookMarkData = getBookMarkList();
+        pagerReady = getIntent().getBooleanExtra("pagerReady",false);
 
-//        // make splash - 조건에 맞게 스플래쉬 해주는거 추가해야함
-//        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
-//        startActivity(intent);
+
 
         GpsInfo gps = new GpsInfo(MainActivity.this);
-        double latitude = 37.715133, longitude = 126.734086;
+        LatLng latLng = new LatLng(latitude, longitude);
         if(gps.isGetLocation()){
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
             // Creating a LatLng object for the current location
-             LatLng latLng = new LatLng(latitude, longitude);
+
+             latLng = new LatLng(latitude, longitude);
+        }
+        if(latitude == 0 || longitude == 0){
+            latitude = 37.30276;
+            longitude = 127.02444;
         }
 
-        getEtc2(longitude, latitude, 0);
+
         Log.e("gps", longitude + " " + latitude);
-        if (mAlBookMarkData.size() < 1) {
-            BookMarkData cur_my_loc = new BookMarkData("현재 위치");
+        if (mAlBookMarkData.size() == 0) {
+            BookMarkData cur_my_loc = new BookMarkData("현재 위치", longitude, latitude);
+//            Log.e("Main, size<1", "현재 위치" + longitude + " " + latitude);
             mAlBookMarkData.add(cur_my_loc);
             saveBookMarkList(mAlBookMarkData);
+
+            mPagerAdapter.addItem(cur_my_loc);
+            Log.e("mPagerSize", mPagerAdapter.getCount() + "");
+            mPagerAdapter.notifyDataSetChanged();
         }
-        if (mAlBookMarkData.get(0).noticeDialogFlag) {
-            showNotice();
+
+        boolean restartFalg = getIntent().getBooleanExtra("restart",false);
+        if(restartFalg == false){
+            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+            startActivity(intent);
+            if (mAlBookMarkData.get(0).noticeDialogFlag) {
+                showNotice();
+            }
         }
+        // 첫 정보 를 좌표로 가져오기
+
         Log.e("sharedPreCOunt", mAlBookMarkData.size() + "");
 
-
-        mViewPager = findViewById(R.id.viewPager);
+        mIbtn_openMap = findViewById(R.id.ibtn_openMap);
         mIbtnInfo = findViewById(R.id.btn_info);
         mIbtnEight = findViewById(R.id.ibtn_eight);
         mIbtnWho = findViewById(R.id.ibtn_who);
@@ -97,24 +122,58 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         mIvMainAd = findViewById(R.id.iv_main_ad);
 
 
-        mPagerAdapter = new MainViewPagerAdapter(this);
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(10);
-        mPagerAdapter.addItem(new BookMarkData("현재위치"));
 
-        for (int i = 1; i < mAlBookMarkData.size(); i++) {
-            String curName = mAlBookMarkData.get(i).getLocation_name();
-            Log.e("curName : ", curName);
-            int pos = mPagerAdapter.addItem(new BookMarkData(curName));
-            getRegion(curName, pos);
-            getEtc(curName, pos);
-            getGrade(curName, pos);
+        mPagerAdapter.addItem(new BookMarkData("현재 위치", longitude, latitude));
+        Log.e("Main, size<1", "현재 위치" + longitude + " " + latitude + "adapter added");
+
+
+//        for (int i = 1; i < mAlBookMarkData.size(); i++) {
+//            String curName = mAlBookMarkData.get(i).getLocation_name();
+//            Double tm_x = mAlBookMarkData.get(i).tm_x;
+//            Double tm_y = mAlBookMarkData.get(i).tm_y;
+//            Log.e("curName : ", curName);
+//            int pos = mPagerAdapter.addItem(new BookMarkData(curName, tm_x, tm_y));
+//            mPagerAdapter.notifyDataSetChanged();
+//
+//            Log.e("Main, for", "curName" + curName + " " + tm_x+ " " +tm_y + "adapter added");
+//            getRegion(curName, pos);
+//            getEtc(curName, pos);
+//            getGrade(curName, pos);
 //            getNotice();
-            getHourForecast(pos);
-            getDayForecast(pos);
-        }
-        mPagerAdapter.notifyDataSetChanged();
+//            getHourForecast(pos);
+//            getDayForecast(pos);
+//        }
+//        mPagerAdapter.notifyDataSetChanged();
 
+
+        final double finalLatitude = 37.715133;
+        final double finalLongitude = 126.734086;
+        mIbtnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, "https://dowellcomputer.page.link/Goto");
+
+                Intent chooser = Intent.createChooser(intent, "공유");
+                startActivity(chooser);
+            }
+        });
+        mIbtn_openMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PreviewImageActivity.class);
+                Bundle args = new Bundle();
+                args.putDouble("latitude", finalLatitude);
+                args.putDouble("longitude", finalLongitude);
+                args.putString("station", mPagerAdapter.getItem(0).tv_location_name.getText().toString());
+                args.putString("status", mPagerAdapter.getItem(0).tv_mise_status.getText().toString());
+//                Log.e("tv_location_name", mPagerAdapter.getItem(0).tv_location_name.getText().toString());
+                intent.putExtra("bundle", args);
+                startActivity(intent);
+            }
+        });
         mIbtnBookMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +182,9 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                 for (int i = 0; i < mPagerAdapter.getCount(); i++) {
                     String name = mPagerAdapter.getItem(i).getLocation_name();
                     String state = mPagerAdapter.getItem(i).tv_mise_status.getText().toString();
+                    Log.e("testIndex", i + "");
+                    Log.e("testName", name);
+                    Log.e("testState", state);
                     hashMap.put(name, state);
                 }
                 intent.putExtra("hashMap", hashMap);
@@ -184,13 +246,61 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Handler handler1 = new Handler();
+        handler1.postDelayed(new Runnable() {
+            public void run() {
+                getEtc2(longitude, latitude, 0);
+            }
+        }, 2000);  // 2000은 2초를 의미합니다.
+
+
+        for (int i = 1; i < mAlBookMarkData.size(); i++) {
+            final String curName = mAlBookMarkData.get(i).getLocation_name();
+            Double tm_x = mAlBookMarkData.get(i).tm_x;
+            Double tm_y = mAlBookMarkData.get(i).tm_y;
+            Log.e("curName : ", curName);
+            final int pos = mPagerAdapter.addItem(new BookMarkData(curName, tm_x, tm_y));
+            mPagerAdapter.notifyDataSetChanged();
+
+            Log.e("Main, for", "curName" + curName + " " + tm_x+ " " +tm_y + "adapter added");
+
+            // 2초간 멈추게 하고싶다면
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+//                    my_button.setBackgroundResource(R.drawable.defaultcard);
+                    getRegion(curName, pos);
+                    getEtc(curName, pos);
+                    getGrade(curName, pos);
+                    getNotice();
+                    getHourForecast(pos);
+                    getDayForecast(pos);
+                }
+            }, 1000);  // 2000은 2초를 의미합니다.
+
+//            getRegion(curName, pos);
+//            getEtc(curName, pos);
+//            getGrade(curName, pos);
+//            getNotice();
+//            getHourForecast(pos);
+//            getDayForecast(pos);
+        }
+        mPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        Log.e("resume", "resume");
+        Log.e("resume", mAlBookMarkData.size() + " " + getBookMarkList().size());
+
         if (mAlBookMarkData.size() != getBookMarkList().size()) {
 //            actFinish();
-            onRestart();
+
         }
+        Log.e("resume", "resume2");
+
     }
 
     @Override
@@ -240,6 +350,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     public void getEtcResult(EtcResponse.etcResult etcResult, String name, int pos) {
         BookMarkData bookMarkData = mPagerAdapter.getItem(pos);
         mPagerAdapter.setEtcStatus(pos, etcResult);
+
     }
 
     @Override
